@@ -1,0 +1,93 @@
+{% extends "ontologies_base.html" %}
+
+{% block content %}
+
+<div class="row">
+	<div class="small-12 columns">
+
+<a class="button small" href="{% url 'ontologies:index' %}">Home (back to list of all lists or ontologies)</a>
+
+
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+Title or ID:
+<h1>{{ ontologies.title|default:ontologies.id }}</h1>
+
+	{% if ontologies.description %}
+	<h2>Description</h2>
+
+	{{ ontologies.description }}
+
+	{% endif %}
+
+	{% if ontologies.uri %}
+	<h2>URL</h2>
+
+	URI: {{ ontologies.uri }}
+
+	{% endif %}
+
+	{% if ontologies.file.name %}
+
+	<h2>Uploaded file</h2>
+
+	File: {{ ontologies.file.name }}
+
+	{% endif %}
+
+	{% if ontologies.sparql_endpoint %}
+
+	<h2>SPARQL</h2>
+	<h3>Endpoint</h3>
+	<p>{{ ontologies.sparql_endpoint }}<p>
+
+	{% endif %}
+
+	{% if ontologies.sparql_query %}
+	<h3>Query</h3>
+	<p>{{ ontologies.sparql_query }}</p>
+
+	{% endif %}
+
+
+<h2>Grammar</h2>
+	<p>
+	Stemming (dependent on document language): {{ ontologies.stemming }}
+	</p>
+
+	<p>
+	Forced stemming (independent of document language): {{ ontologies.stemming_force }}
+	</p>
+
+	<p>
+	Hunspell stemming (dependent on document language): {{ ontologies.stemming_hunspell }}
+	</p>
+
+	<p>
+	Forced Hunspell stemming (independent of document language): {{ ontologies.stemming_force_hunspell }}
+	</p>
+
+
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="small-12 columns">
+
+<h3>Actions</h3>
+
+<a class="button" href="{% url 'ontologies:update' ontologies.id %}">Edit settings</a>
+
+<a class="button" href="{% url 'ontologies:apply_ontology' ontologies.id %}">Apply ontology</a></li>
+
+
+
+	</div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title> DSSaaS </title>
+
+    <style>
+             .DefaultButton{
+                    width:30px;
+                    padding:0px;
+                    font-size:14px;
+                    font-weight:900;
+                    height:30px;
+                    margin-right:20px;
+                    background-color:white;
+             }
+             .DefaultButton:hover{ background-color:white;}
+             .DefaultTxt{
+                    height:45px;
+                    border-radius:5px;
+                    font-size:12pt;
+                    width:70px;
+                    text-align:left;
+                    margin:0px;
+                    padding:0px;
+                    border:none;
+                    color:blue;
+                    font-style: italic;
+                    padding-left:10px;
+             }
+             .DefaultRow{
+                    display:inline-block;
+                    width:100%;
+                    text-align:left;
+                    padding-top:0px;
+                    padding-left:20px;
+                    padding-bottom:5px;
+                    border-top:solid 1px darkblue;
+                    min-width:40px;
+             }
+
+         </style>
+</head>
+<body>
+<div class="DefaultRow" style="padding:20px; text-align:center;">
+    <button id="btnSearch" class="btn btn-lg btn-primary" style="width:100px;" type="submit">Search</button>
+    <div/>
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="MessageBox" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="MessageTitle" class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="MessageText">Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+    <form class="form-signin" method="POST" style="padding:0px;">
+        {% csrf_token %}
+        <pre  style= "color:green; font-size: 12px; font-weight: 100; width:35%; float: left; text-align:left ;height:737px; border:solid 1px darkblue; border-radius:0px;"    id="JSONReq"> </pre>
+        <div style="width:65%; text-align:center;float: left;">
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Price: </label>
+                <input type="text" id="txtMinPrice" style="background-color:lightgray;" value="" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"price",$("#txtMinPrice").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+                <input style="display:none;" type="text" id="txtMaxPrice" value="" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"description",$("#txtDescription").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+                <label style="display:none;" style="font-size:14pt; padding-right:10px;"> &#128;	 </label>
+            </div>
+
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Plotting area: </label>
+                <input type="text" id="txtplotArea" style="background-color:lightgray;" value="" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"plotArea",$("#txtplotArea").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+                <label style="font-size:14pt; padding-right:10px;"> m<sup>2 </sup>	 </label>
+            </div>
+
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Living area: </label>
+                <input type="text" id="txtlivingArea" value="" style="background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"livingArea",$("#txtlivingArea").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+                <label style="font-size:14pt; padding-right:10px;"> m<sup>2 </sup>	 </label>
+            </div>
+
+            <div class="DefaultRow" >
+                <label style="font-size:14pt; width:140px; text-align:right;"> Address: </label>
+                <input type="text" id="txtstreet" value="" style="width:120px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"street",$("#txtstreet").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>,
+                <input type="text" id="txthouseNumber" value="" style="width:40px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"houseNumber",$("#txthouseNumber").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>,
+                <input type="text" id="txtzipCode" value="" style="width:80px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"zipCode",$("#txtzipCode").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>,
+                <input type="text" id="txtcity" value="" style="width:110px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"city",$("#txtcity").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>,
+                <input type="text" id="txtcountry" value="" style="width:110px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"country",$("#txtcountry").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;">  Geolocation: </label>
+                [<input type="text" id="txtlat" value="" style="width:130px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"lat",$("#txtlat").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>,
+                <input type="text" id="txtlng" value="" style="width:130px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"lng",$("#txtlng").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>]
+            </div>
+
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Energy label: </label>
+                <input type="text" id="txtenergyLabel" value="" class="DefaultTxt" style="background-color:lightgray;" onchange='modifyFeatures(NewAlternative[0],"energyLabel",$("#txtenergyLabel").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Environment: </label>
+                <input type="text" id="txtenvironment" value="" class="DefaultTxt" style="background-color:lightgray;" onchange='modifyFeatures(NewAlternative[0],"environment",$("#txtenvironment").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> House type: </label>
+                <input type="text" id="txtkindOfHouse" value="" style="width:130px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"kindOfHouse",$("#txtkindOfHouse").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Year: </label>
+                <input type="text" id="txtconstructionYear" value="" style="width:130px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"constructionYear",$("#txtconstructionYear").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Room: </label>
+                <input type="text" id="txtRoom" value="" style="width:130px;text-align:left; padding-left:10px;background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"rooms",$("#txtRoom").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Transportation: </label>
+                <input type="text" id="txtTransportation" value="" style="width:130px;text-align:left; padding-left:10px; background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"transportation",$("#txtTransportation").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Suitable for: </label>
+                <input type="text" id="txtsuitableFor" value="" style="width:130px;text-align:left; padding-left:10px; background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"suitableFor",$("#txtsuitableFor").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Description: </label>
+                <textarea id="txtDescription" value="" style="text-align:left; padding-left:10px; margin-top:10px; width:500px; background-color:lightgray;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"description",$("#txtDescription").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'> </textarea>
+            </div>
+            <div class="DefaultRow">
+                <label style="font-size:14pt; width:140px; text-align:right;"> Image URL: </label>
+                <input type="text" id="txtImageURL" value="" style="background-color:lightgray;width:500px;text-align:left; padding-left:10px;" class="DefaultTxt" onchange='modifyFeatures(NewAlternative[0],"url",$("#txtImageURL").val());$("#JSONReq").text(JSON.stringify(NewAlternative[0],null,"\t"));'>
+            </div>
+            <div class="DefaultRow" style="padding:20px; text-align:center;"></div>
+
+
+            </div>
+        <div  style="padding:20px; text-align:center;">
+            <button id="btnAdd" class="btn btn-lg btn-primary" style="width:100px; " type="button">Add</button>
+            <div/>
+        </div>
+    </form>
+</div>
+</div>
+
+<script>
+
+var NewAlternative = [{
+            "id": "",
+            "description":"",
+            "transportation":"",
+        	"place": {
+        		"address": {
+        			"street": "",
+        			"houseNumber": "",
+        			"zipCode": "",
+        			"city": "",
+        			"country": ""
+        		},
+        		"geolocation": {
+        			"lat": "",
+        			"lng": ""
+        		}
+        	},
+        	"image": {
+        		"url": "",
+        	},
+        	"price": 0,
+        	"environment": "",
+        	"rooms": 0,
+        	"rank": 0,
+        	"livingArea": 0,
+        	"plotArea": 0,
+        	"kindOfHouse": "",
+        	"energyLabel": "",
+        	"constructionYear": 0,
+        	"suitableFor": ""
+}]
+//----------------------------------------------------
+
+//
+
+function modifyFeatures(obj,feature, value) {
+   if(feature=="callType" || feature=="id" ){
+        obj[feature]=value;
+   }
+   else{
+      for(prop in obj) {
+        if(typeof(obj[prop]) == "object"){
+            modifyFeatures(obj[prop],feature, value);
+        }
+        else {
+                if(prop===feature){
+                    obj[prop]=value;
+                    console.log(obj[prop]);
+                    console.log("siamak");
+            }
+        }
+      }
+  }
+}
+//----------------------------------------------------
+function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+               var cookie = jQuery.trim(cookies[i]);
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+             }
+          }
+      }
+ return cookieValue;
+}
+//----------------------------------------------------
+function SentToServer()
+{
+     var csrftoken = getCookie('csrftoken');
+     $.ajax({
+           url : window.location.href, // the endpoint,commonly same url
+           type : "POST", // http method
+           data : { csrfmiddlewaretoken : csrftoken,
+           NewAlternative: JSON.stringify(NewAlternative)
+     }, // data sent with the post request
+
+     // handle a successful response
+     success : function(json) {
+     console.log(json); // another sanity check
+     //On success show the data posted to server as a message
+
+        alert("added");
+
+
+     },
+     // handle a non-successful response
+     error : function(xhr,errmsg,err) {
+     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+     }
+     });
+
+     return 0;
+}
+
+//----------------------------------------------------
+
+function dec2hex (dec) {
+  return dec.toString(16).padStart(2, "0")
+}
+
+// generateId :: Integer -> String
+function generateId (len) {
+  var arr = new Uint8Array((len || 40) / 2)
+  window.crypto.getRandomValues(arr)
+  return Array.from(arr, dec2hex).join('')
+}
+//----------------------------------------------------
+$("#btnSearch").click(function(e) {
+     e.preventDefault();
+    window.location.href="./home";
+
+});
+
+$("#btnAdd").click(function(e) {
+     e.preventDefault();
+    modifyFeatures(NewAlternative[0],"id",generateId(30));
+    SentToServer();
+
+});
+</script>
+
+</body>
+</html>

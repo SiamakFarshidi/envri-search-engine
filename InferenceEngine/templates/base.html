@@ -1,0 +1,647 @@
+<html>
+     <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <title> DSSaaS </title>
+
+         <style>
+             .DefaultButton{
+                    width:30px;
+                    padding:0px;
+                    font-size:14px;
+                    font-weight:900;
+                    height:30px;
+                    margin-right:20px;
+                    background-color:white;
+             }
+             .DefaultButton:hover{ background-color:white;}
+             .DefaultTxt{
+                    height:45px;
+                    border-radius:5px;
+                    font-size:12pt;
+                    width:70px;
+                    text-align:left;
+                    margin:0px;
+                    padding:0px;
+                    border:none;
+                    color:blue;
+                    font-style: italic;
+                    padding-left:10px;
+             }
+             .DefaultRow{
+                    display:inline-block;
+                    width:100%;
+                    text-align:left;
+                    padding-top:0px;
+                    padding-left:20px;
+                    padding-bottom:5px;
+                    border-top:solid 1px darkblue;
+                    min-width:40px;
+             }
+
+         </style>
+     </head>
+ <body>
+ <div class="DefaultRow" style="padding:20px; text-align:center;">
+     <button id="btnAddnewAlternative" class="btn btn-lg btn-primary" style="width:100px;" type="submit">Add</button>
+ <div/>
+ <div class="container">
+      <!-- Modal -->
+      <div class="modal fade" id="MessageBox" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 id="MessageTitle" class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+              <p id="MessageText">Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+     <br/>
+
+     <div style="width:100%; padding-top:50px; text-align:center;float: left;">
+
+     <form class="form-signin" method="POST" style="padding:0px;">
+        {% csrf_token %}
+        <pre  style= "color:green; font-size: 12px; font-weight: 100; width:35%; margin-top:50px;  float: left; height:460px; border:solid 1px darkblue; border-radius:0px;text-align:left;"    id="JSONReq"> </pre>
+         <div style="width:65%; padding-top:50px; text-align:center;float: left;">
+
+            <div class="DefaultRow">
+                <button id="btnPrice" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Price: </label>
+                <input type="text" id="txtMinPrice" value="500" class="DefaultTxt">
+                <input style="display:none;" type="text" id="txtMaxPrice" value="1000" class="DefaultTxt">
+                <label style="display:none;" style="font-size:14pt; padding-right:10px;"> &#128;	 </label>
+            </div>
+
+            <div class="DefaultRow">
+                <button id="btnplotArea" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Plotting area: </label>
+                <input type="text" id="txtplotArea" value="730" class="DefaultTxt">
+                <label style="font-size:14pt; padding-right:10px;"> m<sup>2 </sup>	 </label>
+            </div>
+
+           <div class="DefaultRow">
+                <button id="btnlivingArea" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Living area: </label>
+                <input type="text" id="txtlivingArea" value="215" class="DefaultTxt">
+                <label style="font-size:14pt; padding-right:10px;"> m<sup>2 </sup>	 </label>
+            </div>
+
+            <div class="DefaultRow" style="display:none;">
+                <button id="btnAddress" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Address: </label>
+                <input type="text" id="txtstreet" value="Marshalllaan" style="width:120px;text-align:left; padding-left:10px;" class="DefaultTxt">,
+                <input type="text" id="txthouseNumber" value="350" style="width:40px;text-align:left; padding-left:10px;" class="DefaultTxt">,
+                <input type="text" id="txtzipCode" value="3527 TW" style="width:80px;text-align:left; padding-left:10px;" class="DefaultTxt">,
+                <input type="text" id="txtcity" value="Utrecht" style="width:110px;text-align:left; padding-left:10px;" class="DefaultTxt">,
+                <input type="text" id="txtcountry" value="Netherlands" style="width:110px;text-align:left; padding-left:10px;" class="DefaultTxt">
+            </div>
+            <div class="DefaultRow">
+                <button id="btnGeolocation" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;">  Geolocation: </label>
+                [<input type="text" id="txtlat" value="52.36884694929380" style="width:130px;text-align:left; padding-left:10px;" class="DefaultTxt">,
+                <input type="text" id="txtlng" value="4.903875527379068" style="width:130px;text-align:left; padding-left:10px;" class="DefaultTxt">]
+            </div>
+
+            <div class="DefaultRow">
+                <button id="btnenergyLabel" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Energy label: </label>
+                <input type="text" id="txtenergyLabel" value="A" class="DefaultTxt" readonly>
+            </div>
+
+           <div class="DefaultRow">
+                <button id="btnenvironment" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Environment: </label>
+                <input type="text" id="txtenvironment" value="Quite" class="DefaultTxt" readonly>
+           </div>
+
+          <div class="DefaultRow" style="display:none;">
+                <button id="btnkindOfHouse" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> House type: </label>
+                <input type="text" id="txtkindOfHouse" value="apartment" style="width:130px;text-align:left; padding-left:10px;" class="DefaultTxt">
+           </div>
+
+           <div class="DefaultRow">
+                <button id="btnconstructionYear" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Year: </label>
+                <input type="text" id="txtconstructionYear" value="783" style="width:130px;text-align:left; padding-left:10px;" class="DefaultTxt">
+           </div>
+
+           <div class="DefaultRow">
+                <button id="btnRoom" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Room: </label>
+                <input type="text" id="txtRoom" value="4" style="width:130px;text-align:left; padding-left:10px;" class="DefaultTxt">
+           </div>
+
+
+           <div class="DefaultRow">
+                <button id="btnsuitableFor" class="btn btn-lg btn-primary DefaultButton" type="button">N</button>
+                <label style="font-size:14pt; width:120px; text-align:right;"> Suitable for: </label>
+                <input type="text" id="txtsuitableFor" value="single" style="width:130px;text-align:left; padding-left:10px;" class="DefaultTxt">
+           </div>
+
+            <div class="DefaultRow" style="padding:20px; text-align:left;">
+                <button id="btnListOfSolutions" class="btn btn-lg btn-primary" style="width:150px;" type="submit">List (ajax) </button>
+                <button id="btnFeasibleSolutionsCount" class="btn btn-lg btn-primary" style="width:150px; " type="submit">Count (ajax)</button>
+
+                <button id="btnListOfSolutionsURL" class="btn btn-lg btn-primary" style="width:150px;" type="submit">List (URL) </button>
+                <button id="btnFeasibleSolutionsCountURL" class="btn btn-lg btn-primary" style="width:150px; " type="submit">Count (URL)</button>
+            <div/>
+        </div>
+         </div>
+     </form>
+
+     </div>
+ </div>
+ <div style="clear:both;">&nbsp;</div>
+     <div style="text-align:left; width:100%; padding:0px; margin:0px; padding-bottom:100px;">
+                <h2>Results:</h2><br />
+                <div id="jsonResults"></div>
+     </div>
+ </div>
+
+ <script>
+//----------------------------------------------------
+var FeatureReq = [{
+        "place": {
+            "address": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "country": ""
+            },
+            "geolocation": {
+                "lat": "",
+                "lng": ""
+            }
+        },
+        "price": 1000,
+        "environment": "",
+        "rooms": 0,
+        "livingArea": 0,
+        "plotArea": 0,
+        "kindOfHouse": "",
+        "energyLabel": "",
+        "constructionYear":0 ,
+        "suitableFor": "",
+        "callType": "",
+        "id": "",
+}]
+//----------------------------------------------------
+function modifyFeatureRequirements(obj,feature, priority, value) {
+   if(feature=="callType" || feature=="id" ){
+        obj[feature]=value;
+   }
+   else{
+      for(prop in obj) {
+        if(typeof(obj[prop]) == "object"){
+            modifyFeatureRequirements(obj[prop],feature, priority, value);
+        }
+        else {
+                if(prop===feature){
+                    if(priority==""){
+                value="";
+                }
+                else{
+                    value= priority + ":"+value;
+                }
+                obj[prop]=value;
+                console.log(obj[prop]);
+                console.log("siamak");
+            }
+        }
+      }
+  }
+}
+//---------------------------------------------------- Message box
+function showMessageBox(title, body) {
+    document.getElementById("MessageTitle").innerText = title;
+    document.getElementById("MessageText").innerHTML = body;
+
+    $(document).ready(function () {
+        $('#MessageBox').modal('show');
+    });
+}
+//---------------------------------------------------- Update the list of updates in the knowledge base
+function AddUpdate(NewUpdate) {
+
+    isDuplicate = 0;
+
+    for (i = 0; i < ListOfUpdates["Updates"].length; i++) {
+        if (ListOfUpdates["Updates"][i].ID === NewUpdate.ID && ListOfUpdates["Updates"][i].UF === NewUpdate.UF) {
+            ListOfUpdates["Updates"][i].Val = NewUpdate.Val;
+            isDuplicate = 1;
+            break;
+        }
+    }
+
+    if (isDuplicate === 0)
+        ListOfUpdates["Updates"].push(NewUpdate);
+}
+//----------------------------------------------------
+function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+               var cookie = jQuery.trim(cookies[i]);
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+             }
+          }
+      }
+ return cookieValue;
+}
+//----------------------------------------------------
+$("#btnenergyLabel").click(function(e) {
+     e.preventDefault();
+    if($("#btnenergyLabel").html()=="N"){
+       $("#btnenergyLabel").text("C");
+       $("#btnenergyLabel").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"energyLabel","C",$("#txtenergyLabel").val());
+    }
+    else if($("#btnenergyLabel").html()=="C"){
+       $("#btnenergyLabel").text("S");
+       $("#btnenergyLabel").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"energyLabel","S",$("#txtenergyLabel").val());
+    }
+    else if($("#btnenergyLabel").html()=="S"){
+       $("#btnenergyLabel").text("M");
+        $("#btnenergyLabel").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"energyLabel","M",$("#txtenergyLabel").val());
+    }
+    else if($("#btnenergyLabel").html()=="M"){
+       $("#btnenergyLabel").text("N");
+       $("#btnenergyLabel").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"energyLabel","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnRoom").click(function(e) {
+     e.preventDefault();
+    if($("#btnRoom").html()=="N"){
+       $("#btnRoom").text("C");
+       $("#btnRoom").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"rooms","C",$("#txtRoom").val());
+    }
+    else if($("#btnRoom").html()=="C"){
+       $("#btnRoom").text("S");
+       $("#btnRoom").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"rooms","S",$("#txtRoom").val());
+    }
+    else if($("#btnRoom").html()=="S"){
+       $("#btnRoom").text("M");
+        $("#btnRoom").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"rooms","M",$("#txtRoom").val());
+    }
+    else if($("#btnRoom").html()=="M"){
+       $("#btnRoom").text("N");
+       $("#btnRoom").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"rooms","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnPrice").click(function(e) {
+     e.preventDefault();
+    if($("#btnPrice").html()=="N"){
+       $("#btnPrice").text("C");
+       $("#btnPrice").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"price","C",$("#txtMinPrice").val());
+    }
+    else if($("#btnPrice").html()=="C"){
+       $("#btnPrice").text("S");
+       $("#btnPrice").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"price","S",$("#txtMinPrice").val());
+    }
+    else if($("#btnPrice").html()=="S"){
+       $("#btnPrice").text("M");
+        $("#btnPrice").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"price","M",$("#txtMinPrice").val());
+    }
+    else if($("#btnPrice").html()=="M"){
+       $("#btnPrice").text("N");
+       $("#btnPrice").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"price","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnplotArea").click(function(e) {
+     e.preventDefault();
+    if($("#btnplotArea").html()=="N"){
+       $("#btnplotArea").text("C");
+       $("#btnplotArea").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"plotArea","C",$("#txtplotArea").val());
+    }
+    else if($("#btnplotArea").html()=="C"){
+       $("#btnplotArea").text("S");
+       $("#btnplotArea").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"plotArea","S",$("#txtplotArea").val());
+    }
+    else if($("#btnplotArea").html()=="S"){
+       $("#btnplotArea").text("M");
+        $("#btnplotArea").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"plotArea","M",$("#txtplotArea").val());
+    }
+    else if($("#btnplotArea").html()=="M"){
+       $("#btnplotArea").text("N");
+       $("#btnplotArea").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"plotArea","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnlivingArea").click(function(e) {
+     e.preventDefault();
+    if($("#btnlivingArea").html()=="N"){
+       $("#btnlivingArea").text("C");
+       $("#btnlivingArea").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"livingArea","C",$("#txtlivingArea").val());
+    }
+    else if($("#btnlivingArea").html()=="C"){
+       $("#btnlivingArea").text("S");
+       $("#btnlivingArea").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"livingArea","S",$("#txtlivingArea").val());
+    }
+    else if($("#btnlivingArea").html()=="S"){
+       $("#btnlivingArea").text("M");
+        $("#btnlivingArea").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"livingArea","M",$("#txtlivingArea").val());
+    }
+    else if($("#btnlivingArea").html()=="M"){
+       $("#btnlivingArea").text("N");
+       $("#btnlivingArea").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"livingArea","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnAddress").click(function(e) {
+     e.preventDefault();
+    if($("#btnAddress").html()=="N"){
+       $("#btnAddress").text("C");
+       $("#btnAddress").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"street","C",$("#txtstreet").val());
+       modifyFeatureRequirements(FeatureReq[0],"houseNumber","C",$("#txthouseNumber").val());
+       modifyFeatureRequirements(FeatureReq[0],"zipCode","C",$("#txtzipCode").val());
+       modifyFeatureRequirements(FeatureReq[0],"city","C",$("#txtcity").val());
+       modifyFeatureRequirements(FeatureReq[0],"country","C",$("#txtcountry").val());
+    }
+    else if($("#btnAddress").html()=="C"){
+       $("#btnAddress").text("S");
+       $("#btnAddress").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"street","S",$("#txtstreet").val());
+       modifyFeatureRequirements(FeatureReq[0],"houseNumber","S",$("#txthouseNumber").val());
+       modifyFeatureRequirements(FeatureReq[0],"zipCode","S",$("#txtzipCode").val());
+       modifyFeatureRequirements(FeatureReq[0],"city","S",$("#txtcity").val());
+       modifyFeatureRequirements(FeatureReq[0],"country","S",$("#txtcountry").val());
+    }
+    else if($("#btnAddress").html()=="S"){
+       $("#btnAddress").text("M");
+        $("#btnAddress").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"street","M",$("#txtstreet").val());
+       modifyFeatureRequirements(FeatureReq[0],"houseNumber","M",$("#txthouseNumber").val());
+       modifyFeatureRequirements(FeatureReq[0],"zipCode","M",$("#txtzipCode").val());
+       modifyFeatureRequirements(FeatureReq[0],"city","M",$("#txtcity").val());
+       modifyFeatureRequirements(FeatureReq[0],"country","M",$("#txtcountry").val());
+    }
+    else if($("#btnAddress").html()=="M"){
+       $("#btnAddress").text("N");
+       $("#btnAddress").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"street","","");
+       modifyFeatureRequirements(FeatureReq[0],"houseNumber","","");
+       modifyFeatureRequirements(FeatureReq[0],"zipCode","","");
+       modifyFeatureRequirements(FeatureReq[0],"city","","");
+       modifyFeatureRequirements(FeatureReq[0],"country","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnGeolocation").click(function(e) {
+     e.preventDefault();
+    if($("#btnGeolocation").html()=="N"){
+       $("#btnGeolocation").text("C");
+       $("#btnGeolocation").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"lat","C",$("#txtlat").val());
+       modifyFeatureRequirements(FeatureReq[0],"lng","C",$("#txtlng").val());
+    }
+    else if($("#btnGeolocation").html()=="C"){
+       $("#btnGeolocation").text("S");
+       $("#btnGeolocation").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"lat","S",$("#txtlat").val());
+       modifyFeatureRequirements(FeatureReq[0],"lng","S",$("#txtlng").val());
+    }
+    else if($("#btnGeolocation").html()=="S"){
+       $("#btnGeolocation").text("M");
+        $("#btnGeolocation").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"lat","M",$("#txtlat").val());
+       modifyFeatureRequirements(FeatureReq[0],"lng","M",$("#txtlng").val());
+    }
+    else if($("#btnGeolocation").html()=="M"){
+       $("#btnGeolocation").text("N");
+       $("#btnGeolocation").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"lat","","");
+       modifyFeatureRequirements(FeatureReq[0],"lng","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnenvironment").click(function(e) {
+     e.preventDefault();
+    if($("#btnenvironment").html()=="N"){
+       $("#btnenvironment").text("C");
+       $("#btnenvironment").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"environment","C",$("#txtenvironment").val());
+    }
+    else if($("#btnenvironment").html()=="C"){
+       $("#btnenvironment").text("S");
+       $("#btnenvironment").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"environment","S",$("#txtenvironment").val());
+    }
+    else if($("#btnenvironment").html()=="S"){
+       $("#btnenvironment").text("M");
+        $("#btnenvironment").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"environment","M",$("#txtenvironment").val());
+    }
+    else if($("#btnenvironment").html()=="M"){
+       $("#btnenvironment").text("N");
+       $("#btnenvironment").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"environment","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnkindOfHouse").click(function(e) {
+     e.preventDefault();
+    if($("#btnkindOfHouse").html()=="N"){
+       $("#btnkindOfHouse").text("C");
+       $("#btnkindOfHouse").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"kindOfHouse","C",$("#txtkindOfHouse").val());
+    }
+    else if($("#btnkindOfHouse").html()=="C"){
+       $("#btnkindOfHouse").text("S");
+       $("#btnkindOfHouse").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"kindOfHouse","S",$("#txtkindOfHouse").val());
+    }
+    else if($("#btnkindOfHouse").html()=="S"){
+       $("#btnkindOfHouse").text("M");
+        $("#btnkindOfHouse").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"kindOfHouse","M",$("#txtkindOfHouse").val());
+    }
+    else if($("#btnkindOfHouse").html()=="M"){
+       $("#btnkindOfHouse").text("N");
+       $("#btnkindOfHouse").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"kindOfHouse","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnconstructionYear").click(function(e) {
+     e.preventDefault();
+    if($("#btnconstructionYear").html()=="N"){
+       $("#btnconstructionYear").text("C");
+       $("#btnconstructionYear").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"constructionYear","C",$("#txtconstructionYear").val());
+    }
+    else if($("#btnconstructionYear").html()=="C"){
+       $("#btnconstructionYear").text("S");
+       $("#btnconstructionYear").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"constructionYear","S",$("#txtconstructionYear").val());
+    }
+    else if($("#btnconstructionYear").html()=="S"){
+       $("#btnconstructionYear").text("M");
+        $("#btnconstructionYear").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"constructionYear","M",$("#txtconstructionYear").val());
+    }
+    else if($("#btnconstructionYear").html()=="M"){
+       $("#btnconstructionYear").text("N");
+       $("#btnconstructionYear").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"constructionYear","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnsuitableFor").click(function(e) {
+     e.preventDefault();
+    if($("#btnsuitableFor").html()=="N"){
+       $("#btnsuitableFor").text("C");
+       $("#btnsuitableFor").css("background-color","#0E6251");
+       modifyFeatureRequirements(FeatureReq[0],"suitableFor","C",$("#txtsuitableFor").val());
+    }
+    else if($("#btnsuitableFor").html()=="C"){
+       $("#btnsuitableFor").text("S");
+       $("#btnsuitableFor").css("background-color","#512E5F");
+       modifyFeatureRequirements(FeatureReq[0],"suitableFor","S",$("#txtsuitableFor").val());
+    }
+    else if($("#btnsuitableFor").html()=="S"){
+       $("#btnsuitableFor").text("M");
+        $("#btnsuitableFor").css("background-color","#943126");
+       modifyFeatureRequirements(FeatureReq[0],"suitableFor","M",$("#txtsuitableFor").val());
+    }
+    else if($("#btnsuitableFor").html()=="M"){
+       $("#btnsuitableFor").text("N");
+       $("#btnsuitableFor").css("background-color","white");
+       modifyFeatureRequirements(FeatureReq[0],"suitableFor","","");
+    }
+    $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+});
+//----------------------------------------------------
+$("#btnListOfSolutions").click(function(e) {
+     e.preventDefault();
+     modifyFeatureRequirements(FeatureReq[0],"callType","","list");
+     SentToServer(FeatureReq);
+});
+
+$("#btnFeasibleSolutionsCount").click(function(e) {
+     e.preventDefault();
+     modifyFeatureRequirements(FeatureReq[0],"callType","","count");
+     SentToServer(FeatureReq);
+});
+//----------------------------------------------------
+function OpenDetails(id){
+    modifyFeatureRequirements(FeatureReq[0],"id","",id);
+    modifyFeatureRequirements(FeatureReq[0],"callType","","detail");
+    SentToServer(FeatureReq);
+}
+//----------------------------------------------------
+$("#btnAddnewAlternative").click(function(e) {
+     e.preventDefault();
+    window.location.href="./addNew";
+});
+----------------------------------------------------
+$("#btnFeasibleSolutionsCountURL").click(function(e) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(FeatureReq));
+    xhr.onload = function() {
+        var data = JSON.parse(this.responseText);
+        console.log(data);
+    };
+});
+
+
+//----------------------------------------------------
+function SentToServer(FeatureReq)
+{
+     $("#JSONReq").text(JSON.stringify(FeatureReq[0],null,'\t'));
+     var csrftoken = getCookie('csrftoken');
+     $.ajax({
+           url : window.location.href, // the endpoint,commonly same url
+           type : "POST", // http method
+           data : { csrfmiddlewaretoken : csrftoken,
+           FeatureReq: JSON.stringify(FeatureReq)
+     }, // data sent with the post request
+
+     // handle a successful response
+     success : function(json) {
+     console.log(json); // another sanity check
+     //On success show the data posted to server as a message
+     strResults="";
+    cnt=1;
+    for (jsonResult in json) {
+         strResults= strResults +
+            "<pre  style= 'color:green; font-size: 12px; font-weight: 100; width:100%; margin-top:10px; float: left; height:300px; border:solid 1px darkblue;'> <b>Result " +
+            cnt + ": </b><br/> <br/>"+ JSON.stringify(json[jsonResult],null,'\t') + "  </pre> "+ "<br/>"+
+            "<div style='width:100%; text-align:right;'> <button class='btn btn-lg btn-primary' style='width:100px;' type='button' onclick='OpenDetails("+
+            JSON.stringify(json[jsonResult]["id"])+");' >detail</button> </div>";
+         cnt++
+    }
+    $("#jsonResults").html(strResults);
+     },
+     // handle a non-successful response
+     error : function(xhr,errmsg,err) {
+     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+     }
+     });
+
+     return 0;
+}
+//----------------------------------------------------
+
+</script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% block content %}
+
+
+<h1>Solr relevance ranking analysis</h1>
+
+<form action="" method="get">
+{{form}}
+<input type="submit" class="button" value="Analyze ranking">
+</form>
+
+<div data-sticky-container>
+  <div class="top-bar" data-sticky data-margin-top="0" id="main-menu">
+      <ul class="menu" data-magellan>
+	<li><a href="#summary">Summarization (with visualization)</a></li>
+	<li><a href="#visualization">Chart (more compact visualization)</a></li>
+	<li><a href="#query">Query details</a></li>
+	<li><a href="#ranking">Ranking details</a></li>
+	<li><a href="#timing">Timing</a></li>
+      </ul>
+  </div>
+</div>
+
+
+<div class="sections">
+
+
+<section id="summary" data-magellan-target="summary">
+
+<h2>Summary</h2>
+
+<h3>Most relevant fields</h3>
+Field boost config of most relevant searched and matched fields:
+
+<ul>
+{% for field, values in fields.items %}
+{% if values.boost %}
+
+<li style="display: inline-block;">
+
+<strong>{{ field }}</strong> (boost: &lowast;{{values.boost}}) <div style="display: inline-block; background-color: {{ values.color }}; height: {{ values.boost }}px; width: {{ values.boost }}px;"></div>
+
+</li>
+{% endif %}
+
+
+{% endfor %}
+</ul>
+
+{% if boostfuncs %}
+
+<h3>Boost functions</h3>
+
+<ul>
+{% for field, values in fields.items %}
+
+{% if not values.boost %}
+<li style="display: inline-block;">
+
+<span style="display: inline-block; background-color: {{ values.color }};"><strong>{{ field }}</strong></span>
+
+</li>
+
+{% endif %}
+
+
+{% endfor %}
+</ul>
+{% endif %}
+
+
+<h3>Summarization of ranking, scoring and term & field weights</h3>
+
+<p>Highest scored {{ count_docs }} of {{ numFound }} found documents for <a title="Show query details" href="#query">Solr query</a> with Querystring <i>{{querystring}}</i>:</p>
+
+<table>
+
+{% for doc in docs %}
+
+
+<tr>
+    <td colspan="3">
+<hr>
+
+<p><small>ID: <a href="{{ doc.id }}">{{ doc.id }}</a>
+
+{% if doc.title %}
+ | {{doc.title_field}}: {{doc.title}}
+{% endif %}
+</small></p>
+
+Terms: {% for entry in doc.summarization %}+<div style="display: inline-block; background-color: {{entry.fieldcolor}}; height: 20px; width: {{ entry.score_scaled }}px;">{{ entry.term }}</div>{% endfor %}
+    </td>
+</tr>
+
+
+
+<tr>
+<td>
+Score:<br>
+{{ doc.score }}
+</td>
+
+
+
+<td>
+
+    <ul>
+	{% for entry in doc.summarization %}
+
+	<li><small>Weight</small> {{ entry.score }} <small>from</small> <strong><i><span style="color: {{entry.fieldcolor}};">{{ entry.term }}</span></i></strong> 
+	{% if entry.tfNorm %}
+	    <small>(tfNorm: {{entry.tfNorm}}  &lowast; idf: {{ entry.idf }})</small>
+	{% endif %}
+	in <span style="color: {{entry.fieldcolor}};"><strong>{{ entry.fieldname }}</strong></span>
+	{% if entry.boost %}
+		<small> (field boost: &lowast;{{ entry.boost }})</small>
+	{% endif %}
+	</li>
+	{% endfor %}
+    </ul>
+
+</td>
+
+<td>
+<a class="button tiny" href="#{{doc.id}}">Show details</a>
+</td>
+
+</tr>
+
+
+
+
+{% endfor %}
+
+</table>
+
+</section>
+
+<section id="query" data-magellan-target="query">
+
+<h2>Solr query</h2>
+<p><i><a target="_blank" href="{{query}}">{{query}}</a></i></p>
+
+<h3>Querystring (q)</h3>
+<p><i>{{querystring}}</i></p>
+
+<h3>Parsed query</h3>
+<p><i>{{parsed_query}}</i></p>
+
+<h3>Boost queries (bq)</h3>
+{% for boost_query in boost_queries %}
+
+<p>
+<i>{{boost_query}}</i>
+</p>
+{% endfor %}
+
+<h4>Parsed boost queries</h4>
+{% for boost_query in parsed_boost_queries %}
+
+<p>
+<i>{{boost_query}}</i>
+</p>
+{% endfor %}
+
+<h3>Filter queries (fq)</h3>
+{% for filter_query in filter_queries %}
+
+<p>
+<i>{{filter_query}}</i>
+</p>
+{% endfor %}
+
+<h4>Parsed filter queries</h4>
+{% for filter_query in parsed_filter_queries %}
+
+<p>
+<i>{{filter_query}}</i>
+</p>
+{% endfor %}
+
+
+<h3>Function queries / Boost functions (bf)</h3>
+{% for boostfunction in boostfuncs %}
+<p>
+<i>{{boostfunction}}</i>
+</p>
+
+{% endfor %}
+
+</section>
+
+<section id="timing" data-magellan-target="timing">
+
+<h3>Timing</h3>
+<pre>{{timing}}</pre>
+
+</section>
+
+<section id="ranking" data-magellan-target="ranking">
+
+<h2>Ranking details</h2>
+{% for doc in docs %}
+
+<a name="{{doc.id}}"></a>
+<h4>{{doc.id}}</h4>
+{% if doc.title %}
+{{doc.title_field}}: {{doc.title}}
+{% endif %}
+
+<pre>
+    {{doc.explain}}
+</pre>
+{% endfor %}
+
+</section>
+
+<section id="visualization" data-magellan-target="visualization">
+
+<h2>Visualization of ranking/scoring/term weights</h2>
+
+<p>
+Most relevant searched and matched fields:
+{% for field, values in fields.items %}
+{% if values.boost %}
+
+<span style="display: inline-block; background-color: {{ values.color }};">
+<strong>{{ field }}</strong> (boost: &lowast;{{values.boost}})
+</span>
+
+{% endif %}
+
+
+{% endfor %}
+</p>
+
+{% if boostfuncs %}
+
+<p>
+Boost functions:
+
+{% for field, values in fields.items %}
+
+{% if not values.boost %}
+
+<span style="display: inline-block; background-color: {{ values.color }};"><strong>{{ field }}</strong></span>
+
+{% endif %}
+
+{% endfor %}
+{% endif %}
+</p>
+
+<p>Ranked documents scored by sum of term weights from most weighted fields matching the query and (optional) boost functions:</p>
+
+{% for doc in docs %}
+<hr>
+
+<small>Score: {{doc.score}} - ID: <a href="{{ doc.id }}">{{ doc.id }}</a>
+{% if doc.title %}
+ | {{doc.title_field}}: {{doc.title}}
+{% endif %}
+</small><br>
+
+{% for entry in doc.summarization %}+<div style="display: inline-block; background-color: {{entry.fieldcolor}}; height: 20px; width: {{ entry.score_scaled }}px;">{{ entry.term }}</div>{% endfor %}
+
+
+{% endfor %}
+
+</section>
+
+
+</div>
+
+
+{% endblock content %}

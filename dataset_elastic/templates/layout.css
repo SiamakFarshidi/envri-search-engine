@@ -1,0 +1,16 @@
+.property { 
+  float: left;
+  width: 33.33%;
+  } 
+
+/* Clear floats after the columns */
+.search_results:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+.propery_left{ float: left; width: 33.333%; }
+.propery_right{ float: right; width: 33.333%; }
+.propery_center{ display: inline-block; width: 33.333%; }

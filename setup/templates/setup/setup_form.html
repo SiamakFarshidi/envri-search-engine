@@ -1,0 +1,469 @@
+{% extends "datasources_base.html" %}
+
+{% block content %}
+
+<form {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} action="" method="post">{% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+<div class="row">
+
+	<div class="small-12 columns">
+
+
+<h1>Edit setup</h1>
+
+
+	</div>
+</div>
+
+
+
+
+
+<div class="row">
+
+	<div class="small-12 columns">
+
+
+<dl class="tabs" data-tab>
+  <dd><a href="#panel-ui">Search user interface</a></dd>
+  <dd class="active"><a href="#panel-language">Document language(s)</a></dd>
+  <dd><a href="#panel-ocr">OCR</a></dd>
+  <dd><a href="#panel-ner">Named Entity Recognition (NER)</a></dd>
+  <dd><a href="#panel-segmentation">Segmentation (pages & sentences)</a></dd>
+  <dd><a href="#panel-thumbnails">Preview (thumbnails)</a></dd>
+  <dd><a href="#panel-neo4j">Graph DB (Neo4j)</a></dd>
+  <dd><a href="#panel-servers">Servers (URLs)</a></dd>
+</dl>
+
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="tabs-content">
+
+  <section class="content" id="panel-title">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>Name or notes</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+
+<p>Not necessary, only for managing purpose</p>
+
+        {{ form.title.errors }}
+        <label for="id_title">Title:</label>
+        {{ form.title }}
+
+<div class="row">
+
+    <div class="small-12 medium-8 columns">
+    <h3>Notes</h3>
+        {{ form.description.errors }}
+        <label for="id_description">Description or Notes</label>
+        {{ form.description }}
+    </div>
+
+
+</div>
+
+</section>
+
+
+  <section class="content" id="panel-ui">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>User interface</h2>
+	</div>
+</div>
+
+<div class="row">
+
+	<div class="small-12 columns text-center">
+
+			{{ form.language.errors }}
+			<label for="id_language">Language of search user interface:</label>
+			{{ form.language }}
+
+	</div>
+
+</div>
+
+
+</section>
+
+
+  <section class="content active" id="panel-language">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+		<h2>Grammar (stemming)</h2>
+	</div>
+</div>
+
+<div class="row">
+			<p>You can enable all document language dependent grammars, since for each document only the grammar of the document language will be applied. If your documents are only or mainly in one language, you should force a grammar, so the grammar is applied even if the document language is not recognized correct.</p>
+
+	<div class="small-6 columns text-center">
+
+		
+			<h3>Use grammar (dependent on document language)</h3>
+			<p>Use grammar heuristic (stemming) if the document language was autodetected</p>
+
+			{{ form.languages.errors }}
+			<label for="id_languages">Grammars:</label>
+			{{ form.languages }}
+
+	</div>
+	
+	<div class="small-6 columns text-center">
+
+			<h3>Force grammar (independent of document language)</h3>
+			<p>Force grammar(s) / stemmers for all documents (even if other language)</p>
+
+			{{ form.languages_force.errors }}
+			<label for="id_languages_forced">Forced grammar(s):</label>
+			{{ form.languages_force }}
+
+	</div>
+</div>
+
+<div class="row">
+			<p>Additional (results in bigger index) or alternate you can enable stemming by grammar rules and dictionary based Hunspell stemmer:</p>
+
+	<div class="small-6 columns text-center">
+
+		
+			<h3>Use Hunspell stemmer (dependent on document language)</h3>
+			<p>Use Hunspell rules & dictionary if the document language was autodetected</p>
+
+			{{ form.languages_hunspell.errors }}
+			<label for="id_languages_hunspell">Hunspell grammars:</label>
+			{{ form.languages_hunspell }}
+
+	</div>
+	
+	<div class="small-6 columns text-center">
+
+			<h3>Force Hunspell stemmer (independent of document language)</h3>
+			<p>Force Hunspell language rules & dictionaries for all documents (even if other language)</p>
+
+			{{ form.languages_force_hunspell.errors }}
+			<label for="id_languages_forced_hunspell">Forced hunspell grammar(s):</label>
+			{{ form.languages_force_hunspell }}
+
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns text-center">
+
+		<h3>OCR dictionaries</h3>
+		
+			<p>Dictionaries to use for optical character recognition of scanned documents</p>
+
+
+			{{ form.ocr_languages.errors }}
+			<label for="id_ocr_languages">OCR dictionaries:</label>
+			{{ form.ocr_languages }}
+
+
+
+    </div>
+
+
+</div>
+
+
+
+</section>
+
+
+
+  <section class="content" id="panel-ocr">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>OCR of scanned documents and images</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+
+<p>Extract & find text from scanned or photographed documents by optical character recognition (OCR) of images</p>
+
+
+<h3>OCR</h3>
+
+<p>Extract text from images by optical character recognition</p>
+
+        {{ form.ocr.errors }}
+        <label for="id_ocr">OCR:</label>
+        {{ form.ocr }}
+
+
+<h3>OCR of images in PDF documents</h3>
+
+<p>Extract text from images embedded in PDF documents (f.e. scanned documents)</p>
+
+        {{ form.ocr_pdf.errors }}
+        <label for="id_ocr_pdf">OCR images in PDF:</label>
+        {{ form.ocr_pdf }}
+
+
+<h3>Descew</h3>
+
+<p>Additionally descew images before OCR, which sometimes improves OCR results for bad quality scans.</p>
+
+        {{ form.ocr_descew.errors }}
+        <label for="id_ocr_descew">Descew:</label>
+        {{ form.ocr_descew }}
+
+<p>Warning: This will take long time / multiple the time for OCR but in some cases of bad quality scans more can be recognized.</p>
+
+
+<h3>Priority</h3>
+
+        {{ form.ocr_later.errors }}
+        <label for="id_ocr_later">Run configured OCR tasks later:</label>
+        {{ form.ocr_later }}
+
+<p>Since OCR slows down indexing by needing most time for often only few additional infos, OCR can be done later by reindexing with enabled OCR after all documents were yet indexed without OCR first to get an usable index many times faster. So you can search & will find most documents much earlier while OCR analysis runs later in background.</p>
+
+
+<h3>OCR dictionaries</h3>
+
+<p>Set up the used language specific OCR dictionaries in the tab <i>Document language(s)</i></p>
+
+</div>
+
+</section>
+
+
+  <section class="content" id="panel-ner">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>Named Entity Recognition (NER) by machine learning</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+<p>Named Entity recognition needs many CPU ressources while indexing documents, but will extract automatically many entities like persons, organizaztions or places (that are not configured in your thesaurus or ontologies) for interactive filters & enhanced analysis.</p>
+
+<h3>SpaCy NER</h3>
+
+<p>Extract named entities by SpaCy NER</p>
+
+        {{ form.ner_spacy.errors }}
+        <label for="id_ner_spacy">Spacy NER:</label>
+        {{ form.ner_spacy }}
+
+
+<h3>Stanford NER</h3>
+
+<p>Alternate (or additionally to recognize some entities which SpaCy did not recognize) you can use the NER models of another NER framework Stanford NER</p>
+        {{ form.ner_stanford.errors }}
+        <label for="id_ner_stanford">Stanford NER:</label>
+        {{ form.ner_stanford }}
+
+<p>Warning: Low performance while indexing of documents!</p>
+
+</div>
+
+</section>
+
+
+
+  <section class="content" id="panel-segmentation">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>Segmentation to pages</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+<p>By segmentation of PDF files to single pages you can find and analyze PDF documents more granular by single pages.</p>
+
+        {{ form.segmentation_pages.errors }}
+        <label for="id_segmentation_pages">Segmentation to pages:</label>
+        {{ form.segmentation_pages }}
+
+<p>Warning: Will double indexing time and index size!</p>
+</div>
+</div>
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+
+<h2>Segmentation to sentences</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+<p>By segmentation of document text to single sentences you can find and analyze entities more granular by search and filter entities that occur together in same sentence(s).</p>
+
+        {{ form.segmentation_sentences.errors }}
+        <label for="id_segmentation_sentences">Sentence segmentation:</label>
+        {{ form.segmentation_sentences }}
+
+<p>Warning: Will double indexing time and index size!</p>
+
+
+</div>
+</div>
+
+</section>
+
+
+
+  <section class="content" id="panel-thumbnails">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>Preview (Thumbnails)</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+<h3>PDF preview</h3>
+
+<p>By additional segmentation / splitting of PDF files to single page PDF files for preview you can spare download bandwith for downloading of full PDF by only downloading/previewing the previewed pages, which can be useful outside your intranet providing search in very big/massive PDF documents over internet.</p>
+
+        {{ form.segmentation_pages_preview.errors }}
+        <label for="id_segmentation_pages_preview">Generate additional splitted / single page PDFs for preview:</label>
+        {{ form.segmentation_pages_preview }}
+
+<p>Warning: Needs additional disc space (more than the size of all indexed PDF files) in separate thumbnail directory!</p>
+
+</div>
+
+</section>
+
+
+
+  <section class="content" id="panel-neo4j">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>Graph database (neo4j)</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+<p>Export entities in documents and connections from/to documents to graph database for analysis and exploration of indirect connections.</p>
+
+<h3>Export extracted entities and connections</h3>
+
+<p>Export entities connections to Neo4j graph database</p>
+
+        {{ form.graph_neo4j.errors }}
+        <label for="id_graph_neo4j">Enable Neo4j plugin:</label>
+        {{ form.graph_neo4j }}
+
+<p><i>If you don't need analyze indirect connections since direct connections by faceted search are enough you can disable the plugin for performance issues.</i></p>
+
+<h3>Neo4j server</h3>
+
+        {{ form.graph_neo4j_host.errors }}
+        <label for="id_graph_neo4j_host">Host:</label>
+        {{ form.graph_neo4j_host }}
+
+        {{ form.graph_neo4j_user.errors }}
+        <label for="id_graph_neo4j_user">User:</label>
+        {{ form.graph_neo4j_user }}
+
+        {{ form.graph_neo4j_password.errors }}
+        <label for="id_graph_neo4j_password">Password:</label>
+        {{ form.graph_neo4j_password }}
+
+
+<h3>Neo4j browser</h3>
+
+<p>Links from search UI to Neo4j browser for exploration and visualization if the graph</p>
+
+        {{ form.graph_neo4j_browser.errors }}
+        <label for="id_graph_neo4j_browser">Neo4j browser URL:</label>
+        {{ form.graph_neo4j_browser }}
+
+</div>
+
+</section>
+
+
+  <section class="content" id="panel-servers">
+
+
+<div class="row">
+	<div class="small-12 columns text-center">
+<h2>Servers (URLs)</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="small-12 columns">
+
+        {{ form.url_tasks.errors }}
+        <label for="id_url_tasks">URL of Flower task monitoring UI:</label>
+        {{ form.url_tasks }}
+
+</div>
+
+</section>
+
+
+<hr>
+
+
+<div class="row">
+    <div class="small-12 columns">
+
+<h2>Save changes</h2>
+
+    <input class="button" type="submit" value="Save" />
+
+
+    <a class="button" href="{% url 'setup:detail' setup.id %}">Cancel</a>
+
+</div>
+</div>
+
+</form>
+{% endblock content %}
