@@ -62,7 +62,8 @@ INSTALLED_APPS = (
     'genericpages',
     'dataset_elastic',
     'notebookSearch',
-    'webSearch'
+    'webSearch',
+    'webAPI'
 )
 
 MIDDLEWARE = (
