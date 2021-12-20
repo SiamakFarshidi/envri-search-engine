@@ -131,10 +131,10 @@ def genericsearch(request):
         for searchResult in result['hits']['hits']:
             lstResults.append(searchResult['_source'])
 
-#envri-statics
+    #envri-statics
     print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
-    return render(request,'searchResult.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
+    return render(request,'dataset_results.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
 #----------------------------------------------------------------------------------------
 def rest(request):
     try:

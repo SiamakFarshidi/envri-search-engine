@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'entity_rest_api',
     'import_export',
     'rest_framework',
+    'genericpages',
     'dataset_elastic',
     'notebookSearch',
     'webSearch'
