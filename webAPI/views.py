@@ -7,6 +7,38 @@ import os
 from os import walk
 import json
 import uuid
+aggregares={
+    "category":{
+        "terms":{
+            "field": "category.keyword",
+            "size": 20,
+        }
+    },
+    "provider":{
+        "terms":{
+            "field": "provider.keyword",
+            "size": 20,
+        }
+    },
+    "serviceType":{
+        "terms":{
+            "field": "serviceType.keyword",
+            "size": 20,
+        }
+    },
+    "architecturalStyle":{
+        "terms":{
+            "field": "architecturalStyle.keyword",
+            "size": 20,
+        }
+    },
+    "sslSupprt":{
+        "terms":{
+            "field": "sslSupprt.keyword",
+            "size": 20,
+        }
+    },
+}
 
 #-----------------------------------------------------------------------------------------------------------------------
 def aggregates(request):
@@ -14,7 +46,65 @@ def aggregates(request):
     return  0
 #-----------------------------------------------------------------------------------------------------------------------
 def genericsearch(request):
-    return  0
+    es = Elasticsearch("http://localhost:9200")
+    index = Index('webapi', es)
+
+    try:
+        term = request.GET['term']
+    except:
+        term = ''
+
+    try:
+        page = request.GET['page']
+    except:
+        page = 0
+
+    page=page*10
+    print(term)
+    result={}
+    if term=="*":
+        result = es.search(
+            index="webapi",
+            body={
+                "from" : 0, "size" : 1000,
+                "query": {
+                    "match_all": {}
+                },
+                "aggs":aggregares
+            }
+        )
+    elif term=="top10":
+        result = es.search(
+            index="webapi",
+            body={
+                "from" : 0, "size" : 10,
+                "query": {
+                    "match_all": {}
+                },
+                "aggs":aggregares
+            }
+        )
+    else:
+        user_request = "some_param"
+        query_body = {
+            "from" : 0, "size" : 1000,
+            "query": {
+                "multi_match" : {
+                    "query": term,
+                    "fields": [ "name", "description", "category", "provider", "serviceType", "architecturalStyle"]
+                }
+            },
+            "aggs":aggregares
+        }
+        result = es.search(index="webapi", body=query_body)
+    lstResults=[]
+    for searchResult in result['hits']['hits']:
+        lstResults.append(searchResult['_source'])
+
+    #print("Got %d Hits:" % result['hits']['total']['value'])
+    #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
+    return render(request,'webapi_results.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
+
 #-----------------------------------------------------------------------------------------------------------------------
 # Create your views here.
 def indexingpipeline(request):
@@ -44,7 +134,21 @@ def indexingpipeline(request):
         for name in files:
             indexfile= os.path.join(path, name)
             indexfile = open_file(indexfile)
-            res = es.index(index="webapi", id= uuid.uuid4(), body=indexfile)
+            newRecord={
+                "name":indexfile["API name"],
+                "description":indexfile["Description"],
+                "url":indexfile["Url"],
+                "category":indexfile["Category"],
+                "provider":indexfile["Provider"],
+                "serviceType":indexfile["ServiceType"],
+                "documentation":indexfile["Documentation"],
+                "architecturalStyle": indexfile["Architectural Style"],
+                "endpointUrl":indexfile["Endpoint Url"],
+                "sslSupprt":indexfile["Support SSL"],
+                "logo":indexfile["Logo"]
+            }
+
+            res = es.index(index="webapi", id= uuid.uuid4(), body=newRecord)
             es.indices.refresh(index="webapi")
 
     return render(request,'webcontent_results.html',{})
@@ -56,5 +160,4 @@ def open_file(file):
         print(read_path)
         data = json.load(read_file)
         return data
-
 #-----------------------------------------------------------------------------------------------------------------------

@@ -150,21 +150,21 @@
                         <div class="pcoded-navigatio-lavel" data-i18n="nav.category.navigation">Search Space</div>
                         <ul class="pcoded-item pcoded-left-item">
                             <li class="active">
-                                <a href="#">
+                                <a href="javascript:void(0)">
                                     <span class="pcoded-micon"><i class="ti-world"></i><b>D</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.dash.main">Webpages</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="../dataset_elastic/genericsearch">
+                                <a href="../dataset_elastic/genericsearch?term=top10">
                                     <span class="pcoded-micon"><i class="ti-ruler-pencil"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Datasets</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:void(0)">
+                                <a href="../webAPI/genericsearch?term=top10">
                                     <span class="pcoded-micon"><i class="ti-control-shuffle"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Web APIs</span>
                                     <span class="pcoded-mcaret"></span>
@@ -221,14 +221,14 @@
                         <div class="pcoded-navigatio-lavel" data-i18n="nav.category.forms">Info</div>
                         <ul class="pcoded-item pcoded-left-item">
                             <li>
-                                <a href="/../genericpages/genericpages?page=publications">
+                                <a href="../genericpages/genericpages?page=publications">
                                     <span class="pcoded-micon"><i class="ti-write"></i><b>FC</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Publications</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/../genericpages/genericpages?page=RnD">
+                                <a href="../genericpages/genericpages?page=RnD">
                                     <span class="pcoded-micon"><i class="ti-user"></i><b>FC</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">R&amp;D team</span>
                                     <span class="pcoded-mcaret"></span>
@@ -270,9 +270,19 @@
                                                         <h5 class="m-b-10 titleTrimming">
 
                                                             <a href="{{ resultItem.id.0 }}" target="_blank"  style="color:darkblue;">
+                                                            {% if resultItem.file_formats.0 == "application/pdf; version=1.5" %}
+                                                                <img src="{% static 'images/pdficon.png' %}" style="width:15px; left: 10px; margin-right:6px;"/>
+                                                            {% else %}
                                                                 <img src="{% static 'images/WebPageICON.png' %}" style="width:15px; left: 10px; margin-right:6px;"/>
+                                                            {% endif %}
                                                             {%for title in resultItem.title %}
-                                                                    {{ title }} .
+                                                                {% if title == "file" %}
+                                                                    {{ resultItem.file_formats.0 }} .
+                                                                {% elif title == "" %}
+                                                                    {{ resultItem.text.0}} .
+                                                                {% else %}
+                                                                    {{title}}
+                                                                {% endif %}
                                                             {% endfor %}
                                                         </a>
                                                         </h5>
@@ -291,11 +301,95 @@
                                                             {{ resultItem.modification_date.0 }}
                                                         </div>
                                                         <br>
-                                                        <p class="show-read-more">
+                                                        <p class="show-read-more" style="font-size:small;">
                                                             {%for text in resultItem.text %}
-                                                                {{ text }}
+                                                                {{ text |truncatechars:1000}} ...
                                                             {% endfor %}
                                                         </p>
+                                                        <ul class="breadcrumb-title b-t-default p-t-10">
+                                                            <li class="breadcrumb-item"><a href="#!">
+                                                                {% if resultItem.ResearchInfrastructure.0 == "SeaDataNet" %}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/SeaDataNet.jpg' %}" style="width:50px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "ICOS"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/ICOS.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "LifeWatch"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/LifeWatchERIC.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "AnaEE"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/anaee.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "AQUACOSM"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/AQUACOSM.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "ARISE"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/arise.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "DANUBIUS-RI"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/DANUBIUS-RI.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "DiSSCo"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/DISSCO.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EISCAT_3D"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EISCAT3D.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "eLTER RI"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/elterRI.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EMBRC"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EMBRC.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EMSO"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EMSOERIC.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EMPHASIS"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EMPHASIS.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EPOS"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EPOS.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EUFAR"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EUFAR.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "Euro-Argo ERIC"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/euroArgo.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EUROFLEETS+"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/Eurofleets.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EuroGOOS"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EuroGOOS.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "EUROCHAMP"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/EUROCHAMP.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "HEMERA"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/Hemera.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "IAGOS"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/IAGOSERI.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "INTERACT"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/INTERACT.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "IS-ENES"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/ISENES.png' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "JERICO-RI"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/JERICO.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "SeaDataNet"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/SeaDataNet.jpg' %}" style="width:70px" />
+
+                                                                {% elif resultItem.ResearchInfrastructure.0 == "SIOS"%}
+                                                                <img src="{% static 'images/ENVRI-Collection/RIs/sios.png' %}" style="width:70px" />
+                                                                {% endif %}
+                                                            </a>
+                                                            </li>
+                                                        </ul>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -359,7 +453,7 @@ function search(searchBoxNum){
     document.getElementById('searchbox2').value = sessionStorage.getItem("searchValue");
 //---------------------------------------------------------------------
 $(document).ready(function(){
-    var maxLength = 500;
+    var maxLength = 1000;
     $(".show-read-more").each(function(){
         var myStr = $(this).html();
         if($.trim(myStr).length > maxLength){

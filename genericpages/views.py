@@ -13,3 +13,5 @@ def genericpages(request):
         return render(request,'publications.html',{})
     elif page=="RnD":
         return render(request,'RnDTeam.html',{})
+    elif page=="graphV":
+        return render(request,'graphBasedVisualization.html',{})

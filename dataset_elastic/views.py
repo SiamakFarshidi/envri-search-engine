@@ -109,6 +109,17 @@ def genericsearch(request):
                 "aggs":aggregares
             }
         )
+    elif term=="top10":
+        result = es.search(
+            index="envri",
+            body={
+                "from" : 0, "size" : 10,
+                "query": {
+                    "match_all": {}
+                },
+                "aggs":aggregares
+            }
+        )
     else:
         user_request = "some_param"
         query_body = {
@@ -127,12 +138,12 @@ def genericsearch(request):
             "aggs":aggregares
         }
         result = es.search(index="envri", body=query_body)
-        lstResults=[]
-        for searchResult in result['hits']['hits']:
-            lstResults.append(searchResult['_source'])
+    lstResults=[]
+    for searchResult in result['hits']['hits']:
+        lstResults.append(searchResult['_source'])
 
     #envri-statics
-    print("Got %d Hits:" % result['hits']['total']['value'])
+    #print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
     return render(request,'dataset_results.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
 #----------------------------------------------------------------------------------------

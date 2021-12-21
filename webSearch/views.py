@@ -18,6 +18,10 @@ from elasticsearch_dsl import Search, Index
 import re
 import dateutil.parser
 import ijson
+import nltk
+nltk.download('words')
+words = set(nltk.corpus.words.words())
+
 aggregares={
     "locations":{
         "terms":{
@@ -54,6 +58,7 @@ aggregares={
 
 
 def uploadFromJsonStream(request):
+
     libpath="/home/siamak/Downloads/res (1).json"
     #libpath="/home/siamak/Downloads/res9.json"
     title_txt=[]
@@ -115,7 +120,6 @@ def uploadFromJsonStream(request):
                 File_Size_ss.clear()
                 _text_.clear()
             else:
-                print(doc)
                 if(doc[1]=="string"):
                     if "response.docs.item.title_txt" in doc[0]:
                         title_txt.append(doc[2])
@@ -373,7 +377,7 @@ def textCleansing(txt):
     if type(txt)==str:
         res = isinstance(txt, str)
         if res:
-            txt=re.sub(r'[^A-Za-z0-9 .-\?/:,;~%$#*@!&+=]+', '', txt)
+            txt=re.sub(r'[^A-Za-z0-9 .-\?/:,;~%$#*@!&+=_><]+', '', txt)
     if len(txt)==1:
         txt=""
     return txt
@@ -404,13 +408,23 @@ def genericsearch(request):
         page = 0
 
     page=page*10
-    print(term)
     result={}
     if term=="*":
         result = es.search(
             index="webcontents",
             body={
                 "from" : 0, "size" : 1000,
+                "query": {
+                    "match_all": {}
+                },
+                "aggs":aggregares
+            }
+        )
+    elif term=="top10":
+        result = es.search(
+            index="webcontents",
+            body={
+                "from" : 0, "size" : 10,
                 "query": {
                     "match_all": {}
                 },
@@ -424,18 +438,18 @@ def genericsearch(request):
             "query": {
                 "multi_match" : {
                     "query": term,
-                    "fields": [ "organizations", "title", "publisher", "authors", "producers", "file_extensions", "text"]
+                    "fields": ["title", "text", "organizations", "publisher", "authors", "producers", "file_extensions"]
                 }
             },
             "aggs":aggregares
         }
         result = es.search(index="webcontents", body=query_body)
-        lstResults=[]
-        for searchResult in result['hits']['hits']:
-            lstResults.append(searchResult['_source'])
+    lstResults=[]
+    for searchResult in result['hits']['hits']:
+        lstResults.append(searchResult['_source'])
 
     #envri-statics
-    print("Got %d Hits:" % result['hits']['total']['value'])
+    #print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
     return render(request,'webcontent_results.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
-
+#-----------------------------------------------------------------------------------------------------------------------
