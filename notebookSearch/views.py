@@ -14,7 +14,7 @@ import time
 import pandas as pd
 import re
 #-------------------------------------------------------------------------------------------
-ACCESS_TOKEN_Github= "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"
+ACCESS_TOKEN_Github= "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"
 ACCESS_TOKEN_Gitlab= "glpat-RLNz1MhmyeR7jcox_dyA"
 
 # http request authentication
@@ -38,6 +38,8 @@ def genericsearch(request):
     #search_projects_Gitlab(term)
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+    return render(request,'webapi_results.html',response_data)
+
 #-------------------------------------------------------------------------------------------
 def search_projects_Gitlab(keyword):
     #    cURL = r'curl --header "PRIVATE-TOKEN:'+ACCESS_TOKEN_Gitlab+'" "https://gitlab.example.com/api/v4/search?scope=projects&search='+keyword+'"'
