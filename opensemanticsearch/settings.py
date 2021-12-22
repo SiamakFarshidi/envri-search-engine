@@ -39,31 +39,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'setup',
-    'thesaurus',
-    'crawler',
-    'files',
-    'InferenceEngine',
-    'datasources',
-    'annotate',
-    'search_list',
-    'csv_manager',
-    'rss_manager',
-    'ontologies',
-    'querytagger',
-    'morphology',
-    'hypothesis',
-    'twitter',
-    'search_entity',
-    'visual_graph_explorer',
-    'entity_rest_api',
     'import_export',
     'rest_framework',
     'genericpages',
     'dataset_elastic',
     'notebookSearch',
     'webSearch',
-    'webAPI'
+    'webAPI',
+    'accountManagement'
 )
 
 MIDDLEWARE = (
