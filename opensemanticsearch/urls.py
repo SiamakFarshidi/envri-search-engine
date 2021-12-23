@@ -15,5 +15,6 @@ urlpatterns = [
 	url(r'^genericpages/', include(('genericpages.urls', 'genericpages'), namespace="genericpages")),
 	url(r'^webAPI/', include(('webAPI.urls', 'webAPI'), namespace="webAPI")),
 	url(r'^accountManagement/', include(('accountManagement.urls', 'accountManagement'), namespace="accountManagement")),
+	path('', include(('genericpages.urls', 'genericpages'), namespace="genericpages")),
 
 ]
