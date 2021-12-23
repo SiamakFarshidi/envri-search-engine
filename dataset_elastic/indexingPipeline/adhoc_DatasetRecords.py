@@ -8,9 +8,9 @@ import subprocess
 import requests
 import os
 from urllib.parse import urlparse
-from .WebCrawler import Crawler
+from WebCrawler import Crawler
 #from LanguageDetection import LangaugePrediction
-from .Synonyms import getSynonyms
+from Synonyms import getSynonyms
 from os import walk
 from bs4 import BeautifulSoup
 import requests
@@ -75,7 +75,7 @@ contextualInfo=""
 def getDatasetRecords__LifeWatch():
     driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.get("https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/search?facet.q=type%2Fdataset&resultType=details&sortBy=relevance&from=301&to=400&fast=index&_content_type=json")
-    #    elem = driver.find_element_by_name("q")
+#    elem = driver.find_element_by_name("q")
     print (print(driver.title))
     print("Lifewatch data collection is done!")
     driver.close()
@@ -253,11 +253,11 @@ def clean(doc):
 def topicMining(dataset_json,RI):
     #########################################
     # Turn it off:
-    #    if RI=="SeaDataNet_EDMED": Jsontext=getContextualText_SeaDataNet_EDMED(dataset_json)
-    #    if RI=="SeaDataNet_CDI": Jsontext= getContextualText_SeaDataNet_CDI (dataset_json)
-    #    if RI=="LifeWatch": Jsontext= getContextualText_LifeWatch (dataset_json)
-    #    if RI=="ICOS": Jsontext= getContextualText_ICOS (dataset_json)
-    #    return Jsontext
+#    if RI=="SeaDataNet_EDMED": Jsontext=getContextualText_SeaDataNet_EDMED(dataset_json)
+#    if RI=="SeaDataNet_CDI": Jsontext= getContextualText_SeaDataNet_CDI (dataset_json)
+#    if RI=="LifeWatch": Jsontext= getContextualText_LifeWatch (dataset_json)
+#    if RI=="ICOS": Jsontext= getContextualText_ICOS (dataset_json)
+#    return Jsontext
     ########################################
     lsttopic=[]
     Jsontext=""
@@ -367,10 +367,10 @@ def flatten_list(t):
 #            TextArray=["\""+str(TextArray)+"\""]
 
 #        for text in TextArray:
-#..................................................................................
+            #..................................................................................
 #            if proprtyName.lower() not in str(text).lower() and ("text" in datatype or "definedterm" in datatype):
 #                refinedResults.append(text) if text not in refinedResults else refinedResults
-#..................................................................................
+            #..................................................................................
 #    return refinedResults
 #########################################
 def refineResults(TextArray,datatype,proprtyName):
@@ -597,7 +597,7 @@ def datasetProcessing_ICOS(datasetURL):
                 result=refineResults(result,propertyDatatype,metadata_property)
 
                 #if metadata_property=="language" and (result=="" or result==[]):
-                #   result= LangaugePrediction(extractTextualContent(JSON))
+                 #   result= LangaugePrediction(extractTextualContent(JSON))
 
                 if(cnt==len(metadataStar_object)):
                     extrachar="\n"
@@ -782,9 +782,9 @@ def datasetProcessing_SeaDataNet_EDMED(datasetURL):
             indexFile.write("\""+str(metadata_property)+"\" :"+ str([])+extrachar)
             CSVvalue=CSVvalue+","
 
-    #    value=(getValueHTML_SeaDataNet("Availability", datasetContents))
-    #    value=(getValueHTML_SeaDataNet("Ongoing", datasetContents))
-    #    value=(getValueHTML_SeaDataNet("Global identifier", datasetContents))
+#    value=(getValueHTML_SeaDataNet("Availability", datasetContents))
+#    value=(getValueHTML_SeaDataNet("Ongoing", datasetContents))
+#    value=(getValueHTML_SeaDataNet("Global identifier", datasetContents))
     indexFile.write("}")
     indexFile.close()
     Precision, Recall, Accuracy, F=  metadataRecord_similarity_evaluation(indexfname+".json",'EssentialVariables',['description','keywords','abstract'],essentialVariables)
@@ -932,11 +932,11 @@ def datasetProcessing_SeaDataNet_CDI(datasetURL):
             extrachar=",\n"
 
         flattenValue=(str(MergeList(flatten_list(result)))
-                      .replace("></a","").replace(",","-")
-                      .replace("[","").replace("]","").replace("{","")
-                      .replace("'","").replace("\"","").replace("}","")
-                      .replace("\"\"","").replace(">\\","")
-                      .replace("' ","'").replace(" '","'"))
+                          .replace("></a","").replace(",","-")
+                          .replace("[","").replace("]","").replace("{","")
+                          .replace("'","").replace("\"","").replace("}","")
+                          .replace("\"\"","").replace(">\\","")
+                          .replace("' ","'").replace(" '","'"))
         flattenValue= str([x.strip() for x in flattenValue.split('-')])
 
         if (metadata_property=="description" or metadata_property=="keywords" or metadata_property=="abstract"):
@@ -1029,8 +1029,8 @@ def invertedIndexing(datasetTitle):
             url = re.findall("(?P<url>https?://[^\s]+)", url)
             if not len(url):
                 continue
-        #        elif indexFile_object["otherLocale"]!=[]:
-        #            url=indexFile_object["otherLocale"][0]
+#        elif indexFile_object["otherLocale"]!=[]:
+#            url=indexFile_object["otherLocale"][0]
         else:
             continue
 
@@ -1203,7 +1203,7 @@ def datasetProcessing_LifeWatch(datasetURL):
     indexFile.close()
 
     Precision, Recall, Accuracy, F=  metadataRecord_similarity_evaluation(indexfname+".json",'EssentialVariables',['description','keywords','abstract'],essentialVariables)
-    CSVvalue=CSVvalue+ str(Precision)+","+ str(Recall)+"," +str(Accuracy)+","+ str(F) +","
+    CSVvalue=CSVvalue+ str(Precision)+","+ str(Recall)+"," +str(Accuracy)+","+ str(F) +","   
     Precision, Recall, Accuracy, F = metadataRecord_similarity_evaluation(indexfname+".json",'potentialTopics',['description','keywords','abstract'], (lstKeywords.split(",")))
     CSVvalue=CSVvalue+ str(Precision)+","+ str(Recall)+"," +str(Accuracy)+","+ str(F) +","
     logfile.write(CSVvalue)
@@ -1293,7 +1293,7 @@ def metadataRecord_similarity_evaluation(filename, drivedField, originalFields, 
     Recall=0
     Accuracy=0
     F=0
-
+    
     if (TP+FP)>0:
         Precision= TP / (TP+FP)
     if (TP+FN)>0:
@@ -1387,7 +1387,7 @@ def Run_indexingPipeline_SeaDataNet_EDMED():
     lstDataset= getOnlineDatasetRecords__SeaDataNet_EDMED(False,10,1)
     for datasetURL in lstDataset:
         datasetProcessing_SeaDataNet_EDMED(datasetURL)
-        # ........................................
+    # ........................................
         deleteAllIndexFilesByExtension(".csv")
         Run_indexingPipeline_ingest_indexFiles()
     print("The indexing process has been finished!")
@@ -1399,7 +1399,7 @@ def Run_indexingPipeline_SeaDataNet_CDI():
     lstDataset= getOnlineDatasetRecords__SeaDataNet_CDI(False,10,1)
     for datasetURL in lstDataset:
         datasetProcessing_SeaDataNet_CDI(datasetURL)
-        # ........................................
+    # ........................................
         deleteAllIndexFilesByExtension(".csv")
         Run_indexingPipeline_ingest_indexFiles()
     print("The indexing process has been finished!")
@@ -1411,7 +1411,7 @@ def Run_indexingPipeline_LifeWatch():
     lstDataset= getOnlineDatasetRecords__LifeWatch(False,1,1)
     for datasetURL in lstDataset:
         datasetProcessing_LifeWatch(datasetURL)
-        # ........................................
+    # ........................................
         deleteAllIndexFilesByExtension(".csv")
         Run_indexingPipeline_ingest_indexFiles()
     print("The indexing process has been finished!")
