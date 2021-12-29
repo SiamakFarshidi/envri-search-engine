@@ -154,14 +154,14 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="../dataset_elastic/genericsearch?term=top10">
+                                <a href="../dataset_elastic/genericsearch?term=top10&page=1">
                                     <span class="pcoded-micon"><i class="ti-ruler-pencil"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Datasets</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="../webAPI/genericsearch?term=top10">
+                                <a href="../webAPI/genericsearch?term=top10&page=1">
                                     <span class="pcoded-micon"><i class="ti-control-shuffle"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Web APIs</span>
                                     <span class="pcoded-mcaret"></span>
@@ -461,6 +461,7 @@ function search(searchBoxNum){
         var queryParams = new URLSearchParams(window.location.search);
         // Set new or modify existing parameter value.
         queryParams.set("term", searchValue);
+        queryParams.set("page", 1);
         // Replace current querystring with the new one.
         history.replaceState(null, null, "?"+queryParams.toString());
         location.reload();

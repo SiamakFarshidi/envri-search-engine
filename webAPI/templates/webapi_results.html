@@ -147,14 +147,14 @@
                         <div class="pcoded-navigatio-lavel" data-i18n="nav.category.navigation">Search Space</div>
                         <ul class="pcoded-item pcoded-left-item">
                             <li class="">
-                                <a href="../webSearch/genericsearch?term=top10">
+                                <a href="../webSearch/genericsearch?term=top10&page=1">
                                     <span class="pcoded-micon"><i class="ti-world"></i><b>D</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.dash.main">Webpages</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="../dataset_elastic/genericsearch?term=top10">
+                                <a href="../dataset_elastic/genericsearch?term=top10&page=1">
                                     <span class="pcoded-micon"><i class="ti-ruler-pencil"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Datasets</span>
                                     <span class="pcoded-mcaret"></span>
@@ -312,6 +312,15 @@
                                     </div>
                                 {% endfor %}
                             </div>
+                            <div style="text-align:center; margin-bottom:40px;">
+                                {%for page in page_range %}
+                                {% if page == cur_page %}
+                                <input type="button" class="btn btn-grd-primary" style="font-weight:bold; width:30px; padding:5px;" value="{{ page }}">
+                                {% else %}
+                                <input type="button" class="btn btn-primary btn-outline-primary" style="font-weight:bold; width:30px; padding:5px;" value="{{ page }}" onclick="btnPage({{ page }});">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                         <div id="styleSelector">
 
@@ -340,6 +349,16 @@
 <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
 <script>
 //---------------------------------------------------------------------
+function btnPage(page){
+    // Construct URLSearchParams object instance from current URL querystring.
+    var queryParams = new URLSearchParams(window.location.search);
+    // Set new or modify existing parameter value.
+    queryParams.set("page", page);
+    // Replace current querystring with the new one.
+    history.replaceState(null, null, "?"+queryParams.toString());
+    location.reload();
+}
+//---------------------------------------------------------------------
 function search(searchBoxNum){
     var searchValue =""
     if (searchBoxNum==1){
@@ -358,6 +377,7 @@ function search(searchBoxNum){
         var queryParams = new URLSearchParams(window.location.search);
         // Set new or modify existing parameter value.
         queryParams.set("term", searchValue);
+        queryParams.set("page", 1);
         // Replace current querystring with the new one.
         history.replaceState(null, null, "?"+queryParams.toString());
         location.reload();

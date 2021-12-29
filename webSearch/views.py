@@ -443,11 +443,16 @@ def genericsearch(request):
     #print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
     numHits=result['hits']['total']['value']
+
+    upperBoundPage=round(np.ceil(numHits/10)+1)
+    if(upperBoundPage>10):
+        upperBoundPage=11
+
     return render(request,'webcontent_results.html',
                   {
                    "results":lstResults,
                    "NumberOfHits": numHits,
-                   "page_range": range(1,round(np.ceil(numHits/10)+1)),
+                   "page_range": range(1,upperBoundPage),
                    "cur_page": (page/10+1)
                    }
                   )

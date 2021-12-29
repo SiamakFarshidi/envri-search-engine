@@ -7,6 +7,8 @@ import os
 from os import walk
 import json
 import uuid
+import numpy as np
+
 aggregares={
     "category":{
         "terms":{
@@ -58,7 +60,7 @@ def genericsearch(request):
         page = request.GET['page']
     except:
         page = 0
-    page=int(page)*10
+    page=(int(page)-1)*10
 
     result={}
     if term=="*" or term=="top10":
@@ -91,8 +93,22 @@ def genericsearch(request):
 
     #print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
-    return render(request,'webapi_results.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
 
+
+    numHits=result['hits']['total']['value']
+
+    upperBoundPage=round(np.ceil(numHits/10)+1)
+    if(upperBoundPage>10):
+        upperBoundPage=11
+
+    return render(request,'webapi_results.html',
+                  {
+                      "results":lstResults,
+                      "NumberOfHits": numHits,
+                      "page_range": range(1,upperBoundPage),
+                      "cur_page": (page/10+1)
+                  }
+                  )
 #-----------------------------------------------------------------------------------------------------------------------
 # Create your views here.
 def indexingpipeline(request):

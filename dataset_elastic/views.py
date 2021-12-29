@@ -12,6 +12,7 @@ from elasticsearch_dsl.query import MatchAll
 from django.core import serializers
 from .indexingPipeline import DatasetRecords
 from .indexingPipeline import WebCrawler
+import numpy as np
 
 import json
 es = Elasticsearch("http://localhost:9200")
@@ -95,7 +96,7 @@ def genericsearch(request):
     except:
         page = 0
 
-    page=int(page)*10
+    page=(int(page)-1)*10
     result={}
     if term=="*" or term=="top10":
         result = es.search(
@@ -133,7 +134,21 @@ def genericsearch(request):
     #envri-statics
     #print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
-    return render(request,'dataset_results.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
+
+    numHits=result['hits']['total']['value']
+
+    upperBoundPage=round(np.ceil(numHits/10)+1)
+    if(upperBoundPage>10):
+        upperBoundPage=11
+
+    return render(request,'dataset_results.html',
+                  {
+                      "results":lstResults,
+                      "NumberOfHits": numHits,
+                      "page_range": range(1,upperBoundPage),
+                      "cur_page": (page/10+1)
+                  }
+                  )
 #----------------------------------------------------------------------------------------
 def rest(request):
     try:
