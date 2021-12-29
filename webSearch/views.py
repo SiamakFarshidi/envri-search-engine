@@ -19,6 +19,7 @@ import re
 import dateutil.parser
 import ijson
 import nltk
+import numpy as np
 nltk.download('words')
 words = set(nltk.corpus.words.words())
 
@@ -406,25 +407,14 @@ def genericsearch(request):
         page = request.GET['page']
     except:
         page = 0
-
-    page=page*10
+    page=(int(page)-1)*10
     result={}
-    if term=="*":
+    if term=="*" or term=="top10":
         result = es.search(
             index="webcontents",
             body={
-                "from" : 0, "size" : 1000,
-                "query": {
-                    "match_all": {}
-                },
-                "aggs":aggregares
-            }
-        )
-    elif term=="top10":
-        result = es.search(
-            index="webcontents",
-            body={
-                "from" : 0, "size" : 10,
+                "from" : page,
+                "size" : 10,
                 "query": {
                     "match_all": {}
                 },
@@ -434,7 +424,8 @@ def genericsearch(request):
     else:
         user_request = "some_param"
         query_body = {
-            "from" : 0, "size" : 1000,
+            "from" : page,
+            "size" : 10,
             "query": {
                 "multi_match" : {
                     "query": term,
@@ -451,5 +442,13 @@ def genericsearch(request):
     #envri-statics
     #print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
-    return render(request,'webcontent_results.html',{"results":lstResults, "NumberOfHits": result['hits']['total']['value']})
+    numHits=result['hits']['total']['value']
+    return render(request,'webcontent_results.html',
+                  {
+                   "results":lstResults,
+                   "NumberOfHits": numHits,
+                   "page_range": range(1,round(np.ceil(numHits/10)+1)),
+                   "cur_page": (page/10+1)
+                   }
+                  )
 #-----------------------------------------------------------------------------------------------------------------------

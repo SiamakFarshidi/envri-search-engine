@@ -58,26 +58,14 @@ def genericsearch(request):
         page = request.GET['page']
     except:
         page = 0
+    page=int(page)*10
 
-    page=page*10
-    print(term)
     result={}
-    if term=="*":
+    if term=="*" or term=="top10":
         result = es.search(
             index="webapi",
             body={
-                "from" : 0, "size" : 1000,
-                "query": {
-                    "match_all": {}
-                },
-                "aggs":aggregares
-            }
-        )
-    elif term=="top10":
-        result = es.search(
-            index="webapi",
-            body={
-                "from" : 0, "size" : 10,
+                "from" : page, "size" : 10,
                 "query": {
                     "match_all": {}
                 },
@@ -87,7 +75,7 @@ def genericsearch(request):
     else:
         user_request = "some_param"
         query_body = {
-            "from" : 0, "size" : 1000,
+            "from" : page, "size" : 10,
             "query": {
                 "multi_match" : {
                     "query": term,

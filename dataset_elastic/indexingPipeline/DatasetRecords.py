@@ -1464,18 +1464,3 @@ def deleteAllIndexFilesByExtension(extension):
 #invertedIndexing("SeaDataNet_EDMED_")
 #invertedIndexing("ICOS_")
 #--------------------
-try:
-    Run_indexingPipeline_SeaDataNet_CDI()
-except:
-    print("Error with CDI")
-
-try:
-    Run_indexingPipeline_SeaDataNet_EDMED()
-except:
-    print("Error with EDMED")
-
-try:
-    Run_indexingPipeline_ICOS()
-except:
-    print("Error with ICOS")
-#--------------------

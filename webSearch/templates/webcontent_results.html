@@ -394,7 +394,18 @@
                                     </div>
                                 {% endfor %}
                             </div>
+                            <div style="text-align:center; margin-bottom:40px;">
+                                {%for page in page_range %}
+                                    {% if page == cur_page %}
+                                        <input type="button" class="btn btn-grd-primary" style="font-weight:bold; width:30px; padding:5px;" value="{{ page }}">
+                                    {% else %}
+                                        <input type="button" class="btn btn-primary btn-outline-primary" style="font-weight:bold; width:30px; padding:5px;" value="{{ page }}" onclick="btnPage({{ page }});">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
+
+
                         <div id="styleSelector">
 
                         </div>
@@ -421,6 +432,16 @@
 <script src="{% static 'js/vartical-demo.js' %}"></script>
 <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
 <script>
+//---------------------------------------------------------------------
+function btnPage(page){
+    // Construct URLSearchParams object instance from current URL querystring.
+    var queryParams = new URLSearchParams(window.location.search);
+    // Set new or modify existing parameter value.
+    queryParams.set("page", page);
+    // Replace current querystring with the new one.
+    history.replaceState(null, null, "?"+queryParams.toString());
+    location.reload();
+}
 //---------------------------------------------------------------------
 function search(searchBoxNum){
     var searchValue =""
