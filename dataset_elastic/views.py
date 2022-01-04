@@ -21,35 +21,34 @@ aggregares={
     "ResearchInfrastructure":{
         "terms":{
             "field": "ResearchInfrastructure.keyword",
-            "size": 20,
+            "size": 50,
         }
     },
     "spatialCoverage":{
         "terms":{
             "field": "spatialCoverage.keyword",
-            "size": 20,
+            "size": 50,
         }
     },
     "theme":{
         "terms":{
             "field": "theme.keyword",
-            "size": 20,
+            "size": 50,
         }
     },
     "publisher":{
         "terms":{
             "field": "publisher.keyword",
-            "size": 20,
+            "size": 50,
         }
     },
     "measurementTechnique":{
         "terms":{
             "field": "measurementTechnique.keyword",
-            "size": 20,
+            "size": 50,
         }
     },
 }
-
 #-------------------------------------------------------------------------------------------
 def indexingpipeline(request):
     print("indexing...")
@@ -75,14 +74,14 @@ def indexingpipeline(request):
 #----------------------------------------------------------------------------------------
 def aggregates(request):
     query_body = {
-        "size" : 0,
+        "from" : page,
+        "size" : 10,
         "query": {
             "match_all": {}
         },
         "aggs":aggregares
     }
     result = es.search(index="envri", body=query_body)
-    print("Got %d Hits:" % result['hits']['total']['value'])
     return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
 #----------------------------------------------------------------------------------------
 def genericsearch(request):
@@ -96,16 +95,46 @@ def genericsearch(request):
     except:
         page = 0
 
+    try:
+        filter = request.GET['filter']
+    except:
+        filter = ''
+
+    try:
+        facet = request.GET['facet']
+    except:
+        facet = ''
+
+
+
+    if filter!="" and facet!="":
+        request.session['filters'].append( {"term": {facet+".keyword": filter}})
+    else:
+        del request.session['filters']
+        request.session['filters']=[]
+
+
     page=(int(page)-1)*10
     result={}
     if term=="*" or term=="top10":
         result = es.search(
             index="envri",
             body={
-                "from" : page, "size" : 10,
+                "from" : page,
+                "size" : 10,
+
                 "query": {
-                    "match_all": {}
-                },
+                    "bool" : {
+                        "must" : {
+                            "match_all": {}
+                        },
+                        "filter": {
+                            "bool" : {
+                                "must" :request.session.get('filters')
+                            }
+                        }
+                    }
+                 },
                 "aggs":aggregares
             }
         )
@@ -114,22 +143,90 @@ def genericsearch(request):
         query_body = {
             "from" : page, "size" : 10,
             "query": {
-                "multi_match" : {
-                    "query": term,
-                    "fields": [ "description", "keywords", "contact", "publisher", "citation",
-                                "genre", "creator", "headline", "abstract", "theme", "producer", "author",
-                                "sponsor", "provider", "name", "measurementTechnique", "maintainer", "editor",
-                                "copyrightHolder", "contributor", "contentLocation", "about", "rights", "useConstraints",
-                                "status", "scope", "metadataProfile", "metadataIdentifier", "distributionInfo", "dataQualityInfo",
-                                "contentInfo", "ResearchInfrastructure", "EssentialVariables", "potentialTopics"]
+                "bool": {
+                    "should": {
+                        "multi_match" : {
+                            "query": term,
+                            "fields": [ "description", "keywords", "contact", "publisher", "citation",
+                                        "genre", "creator", "headline", "abstract", "theme", "producer", "author",
+                                        "sponsor", "provider", "name", "measurementTechnique", "maintainer", "editor",
+                                        "copyrightHolder", "contributor", "contentLocation", "about", "rights", "useConstraints",
+                                        "status", "scope", "metadataProfile", "metadataIdentifier", "distributionInfo", "dataQualityInfo",
+                                        "contentInfo", "ResearchInfrastructure", "EssentialVariables", "potentialTopics"],
+                            "type": "best_fields",
+                            "minimum_should_match": "50%"
+                        }
+                    },
+                    "filter": {
+                        "bool" : {
+                            "must" :request.session.get('filters')
+                        }
+                    }
                 }
             },
             "aggs":aggregares
         }
+
         result = es.search(index="envri", body=query_body)
     lstResults=[]
+
+
     for searchResult in result['hits']['hits']:
         lstResults.append(searchResult['_source'])
+    #......................
+    ResearchInfrastructure=[]
+    spatialCoverage=[]
+    theme=[]
+    publisher=[]
+    measurementTechnique=[]
+    #......................
+    for searchResult in result['aggregations']['ResearchInfrastructure']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            RI={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            ResearchInfrastructure.append (RI)
+    #......................
+    for searchResult in result['aggregations']['spatialCoverage']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1)):
+            SC={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            spatialCoverage.append (SC)
+        #......................
+    for searchResult in result['aggregations']['theme']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1)):
+            Th={
+                    'key':searchResult['key'],
+                    'doc_count': searchResult['doc_count']
+                }
+            theme.append (Th)
+    #......................
+    for searchResult in result['aggregations']['publisher']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1 )):
+            Pub={
+                    'key':searchResult['key'],
+                    'doc_count': searchResult['doc_count']
+                }
+            publisher.append (Pub)
+    #......................
+    for searchResult in result['aggregations']['measurementTechnique']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1 )):
+            meT={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            measurementTechnique.append (meT)
+    #......................
+    facets={
+        'ResearchInfrastructure':ResearchInfrastructure,
+        'spatialCoverage':spatialCoverage,
+        'theme':theme,
+        'publisher':publisher,
+        'measurementTechnique':measurementTechnique
+    }
 
     #envri-statics
     #print("Got %d Hits:" % result['hits']['total']['value'])
@@ -143,6 +240,7 @@ def genericsearch(request):
 
     return render(request,'dataset_results.html',
                   {
+                      "facets":facets,
                       "results":lstResults,
                       "NumberOfHits": numHits,
                       "page_range": range(1,upperBoundPage),
@@ -196,8 +294,6 @@ def rest(request):
     except:
         abstract = '*'
 
-    print(term)
-    print(station)
 
     result = esearch(all_fields=term, year_from=year_from, year_to=year_to, lon=lon,
                      lat=lat, station=station.lower(), genre=genre.lower(), author=author.lower(),

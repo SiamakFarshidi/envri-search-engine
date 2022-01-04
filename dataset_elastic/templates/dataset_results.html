@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <a href="../genericpages/genericpages?page=home">
-                        <img class="img-fluid" src="{% static 'images/ENVRI-WHITE-LOGO.png' %}" style="width:65px;  padding:6px;" alt="Theme-Logo" />
+                        <img class="img-fluid" src="{% static 'images/ENVRI-WHITE-LOGO.png' %}" style="width:65px; padding:6px;margin-top:-5px;" alt="Theme-Logo" />
                     </a>
                     <a class="mobile-options">
                         <i class="ti-more"></i>
@@ -153,12 +153,99 @@
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
-                            <li class="active">
+                            <li class="active pcoded-hasmenu">
                                 <a href="javascript:void(0)">
                                     <span class="pcoded-micon"><i class="ti-ruler-pencil"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Datasets</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
+                                <ul class="pcoded-submenu">
+                                    {% if facets.ResearchInfrastructure %}
+                                        <span style="font-weight:bold; padding:5px; color:darkblue; font-size:10pt;">
+                                             Research Infrastructures:
+                                         </span>
+                                    {% endif %}
+                                    {%for facet in facets.ResearchInfrastructure%}
+                                        <li class=" " >
+                                            <a href="#"  onclick="facetSearch('ResearchInfrastructure','{{facet.key}}');">
+                                                <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                                <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">
+                                                    {{ facet.key|truncatechars:15 }}
+                                                    ({{ facet.doc_count }})
+                                                </span>
+                                                <span class="pcoded-mcaret"></span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    {% if facets.measurementTechnique %}
+                                        <span style="font-weight:bold; padding:5px; color:darkblue; font-size:10pt;">
+                                             Measurement Technique:
+                                         </span>
+                                    {% endif %}
+                                    {%for facet in facets.measurementTechnique %}
+                                    <li class=" " >
+                                        <a href="#"  onclick="facetSearch('measurementTechnique','{{facet.key}}');">
+                                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                            <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">
+                                                    {{ facet.key|truncatechars:15 }}
+                                                    ({{ facet.doc_count }})
+                                                </span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    {% if facets.publisher %}
+                                        <span style="font-weight:bold; padding:5px; color:darkblue; font-size:10pt;">
+                                             Publishers:
+                                         </span>
+                                    {% endif %}
+                                    {%for facet in facets.publisher %}
+                                    <li class=" " >
+                                        <a href="#" onclick="facetSearch('publisher','{{facet.key}}');">
+                                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                            <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">
+                                                    {{ facet.key|truncatechars:15 }}
+                                                    ({{ facet.doc_count }})
+                                                </span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    {% if facets.theme %}
+                                        <span style="font-weight:bold; padding:5px; color:darkblue; font-size:10pt;">
+                                             Themes:
+                                         </span>
+                                    {% endif %}
+                                    {%for facet in facets.theme %}
+                                    <li class=" ">
+                                        <a href="#" onclick="facetSearch('theme','{{facet.key}}');">
+                                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                            <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">
+                                                    {{ facet.key|truncatechars:15 }}
+                                                    ({{ facet.doc_count }})
+                                                </span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    {% if facets.spatialCoverage %}
+                                        <span style="font-weight:bold; padding:5px; color:darkblue; font-size:10pt;">
+                                             Spatial Coverage:
+                                         </span>
+                                    {% endif %}
+                                    {%for facet in facets.spatialCoverage %}
+                                    <li class=" ">
+                                        <a href="#" onclick="facetSearch('spatialCoverage','{{facet.key}}');">
+                                            <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                                            <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">
+                                                    {{ facet.key|truncatechars:15 }}
+                                                    ({{ facet.doc_count }})
+                                                </span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
                             </li>
                             <li class="">
                                 <a href="../webAPI/genericsearch?term=top10&page=1">
@@ -256,8 +343,6 @@
                                 <br>
                                 <br>
 
-
-
                                 {%for resultItem in results %}
 
                                     <div class="page-body">
@@ -348,6 +433,17 @@
 <script src="{% static 'js/vartical-demo.js' %}"></script>
 <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
 <script>
+//---------------------------------------------------------------------
+function facetSearch(facet,filter){
+    // Construct URLSearchParams object instance from current URL querystring.
+    var queryParams = new URLSearchParams(window.location.search);
+    // Set new or modify existing parameter value.
+    queryParams.set("filter", filter);
+    queryParams.set("facet", facet);
+    // Replace current querystring with the new one.
+    history.replaceState(null, null, "?"+queryParams.toString());
+    location.reload();
+}
 //---------------------------------------------------------------------
 function btnPage(page){
     // Construct URLSearchParams object instance from current URL querystring.

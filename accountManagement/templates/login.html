@@ -9,6 +9,9 @@
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+
     <![endif]-->
     <!-- Meta -->
     <meta charset="utf-8">
@@ -89,11 +92,11 @@
                             </div>
                             <hr/>
                             <div class="input-group">
-                                <input type="email" class="form-control" placeholder="Your Email Address">
+                                <input type="email" class="form-control" placeholder="Your Email Address" id="username">
                                 <span class="md-line"></span>
                             </div>
                             <div class="input-group">
-                                <input type="password" class="form-control" placeholder="Password">
+                                <input type="password" class="form-control" placeholder="Password" id="password">
                                 <span class="md-line"></span>
                             </div>
                             <div class="row m-t-25 text-left">
@@ -112,8 +115,12 @@
                             </div>
                             <div class="row m-t-30">
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
+                                    <button type="button"
+                                            onclick="login();"
+                                            class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
                                 </div>
+                                <div onclick="ClickLogin()" class="g-signin2" data-onsuccess="onSignIn"  style="width:150px;margin:5px; display:inline-block;"></div>
+
                             </div>
                             <hr/>
 
@@ -191,6 +198,74 @@
 <script src="{% static 'js/vartical-demo.js' %}"></script>
 <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
 
+<script>
+//---------------------------------------------------------------------
+
+var clicked=false;//Global Variable
+function ClickLogin()
+{
+    clicked=true;
+}
+//---------------------------------------------------------------------
+
+
+function onSignIn(googleUser) {
+
+if (clicked) {
+
+        var profile = googleUser.getBasicProfile();
+
+        $.ajax({
+              type: 'post',
+              data:{
+                    GoogleSignIn: "Google",
+                    userid: profile.getId(),
+                    username: profile.getName(),
+                    email: profile.getEmail(),
+                    image: profile.getImageUrl(),
+                    role: "user"
+              },
+              success: function(response){
+
+                    if(response==="Google"){
+                        window.location.replace("/search");
+                    }
+              }
+        });
+
+    }
+}
+//---------------------------------------------------------------------
+
+function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+}
+
+//---------------------------------------------------------------------
+function login(){
+    username= document.getElementById('username').value;
+    password= document.getElementById('password').value;
+
+    // Construct URLSearchParams object instance from current URL querystring.
+    var queryParams = new URLSearchParams(window.location.search);
+    // Set new or modify existing parameter value.
+    queryParams.set("username", username);
+    queryParams.set("password", password);
+    queryParams.set("page", 1);
+    // Replace current querystring with the new one.
+    history.replaceState(null, null, "?"+queryParams.toString());
+    location.reload();
+}
+//---------------------------------------------------------------------
+const url = new URL(location);
+url.searchParams.delete('username');
+url.searchParams.delete('password');
+url.searchParams.delete('page');
+history.replaceState(null, null, url)
+</script>
 
 </body>
 </html>

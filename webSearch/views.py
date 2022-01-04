@@ -54,9 +54,19 @@ aggregares={
             "size": 20,
         }
     },
+    "ResearchInfrastructure":{
+        "terms":{
+            "field": "ResearchInfrastructure.keyword",
+            "size": 20,
+        }
+    },
+    "file_extensions":{
+        "terms":{
+            "field": "file_extensions.keyword",
+            "size": 20,
+        }
+    }
 }
-
-
 
 def uploadFromJsonStream(request):
 
@@ -407,6 +417,24 @@ def genericsearch(request):
         page = request.GET['page']
     except:
         page = 0
+
+
+    try:
+        filter = request.GET['filter']
+    except:
+        filter = ''
+
+    try:
+        facet = request.GET['facet']
+    except:
+        facet = ''
+
+    if filter!="" and facet!="":
+        request.session['filters'].append( {"term": {facet+".keyword": filter}})
+    else:
+        del request.session['filters']
+        request.session['filters']=[]
+
     page=(int(page)-1)*10
     result={}
     if term=="*" or term=="top10":
@@ -415,8 +443,18 @@ def genericsearch(request):
             body={
                 "from" : page,
                 "size" : 10,
+
                 "query": {
-                    "match_all": {}
+                    "bool" : {
+                        "must" : {
+                            "match_all": {}
+                        },
+                        "filter": {
+                            "bool" : {
+                                "must" :request.session.get('filters')
+                            }
+                        }
+                    }
                 },
                 "aggs":aggregares
             }
@@ -427,18 +465,108 @@ def genericsearch(request):
             "from" : page,
             "size" : 10,
             "query": {
-                "multi_match" : {
-                    "query": term,
-                    "fields": ["title", "text", "organizations", "publisher", "authors", "producers", "file_extensions"]
+                "bool": {
+                    "must": {
+                        "multi_match" : {
+                            "query": term,
+                            "fields": [ "title", "text", "organizations", "publisher",
+                                        "authors", "producers", "file_extensions", "locations",
+                                        "ResearchInfrastructure"],
+                            "type": "best_fields",
+                            "minimum_should_match": "100%"
+                        }
+                    },
+                    "filter": {
+                        "bool" : {
+                            "must" :request.session.get('filters')
+                        }
+                    }
                 }
             },
             "aggs":aggregares
         }
+
+
         result = es.search(index="webcontents", body=query_body)
     lstResults=[]
     for searchResult in result['hits']['hits']:
         lstResults.append(searchResult['_source'])
 
+    #......................
+    file_extensions=[]
+    locations=[]
+    producers=[]
+    organizations=[]
+    person=[]
+    authors=[]
+    ResearchInfrastructure=[]
+    #......................
+    for searchResult in result['aggregations']['ResearchInfrastructure']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            RI={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            ResearchInfrastructure.append (RI)
+    #......................
+    for searchResult in result['aggregations']['locations']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            loc={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            locations.append (loc)
+    #......................
+    for searchResult in result['aggregations']['producers']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            prod={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            producers.append (prod)
+    #......................
+    for searchResult in result['aggregations']['organizations']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            org={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            organizations.append (org)
+    #......................
+    for searchResult in result['aggregations']['person']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            pers={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            person.append (pers)
+    #......................
+    for searchResult in result['aggregations']['authors']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            auth={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            authors.append (auth)
+    #......................
+    for searchResult in result['aggregations']['file_extensions']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and
+                (searchResult['key']=="pdf") or (searchResult['key']=="doc")or (searchResult['key']=="xml") or (searchResult['key']=="xls") or (searchResult['key']=="txt")):
+            ext={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            file_extensions.append (ext)
+    #......................
+    facets={
+        "file_extensions":file_extensions,
+        "locations":locations,
+        "producers":producers,
+        "organizations":organizations,
+        "person":person,
+        "authors":authors,
+        "ResearchInfrastructure":ResearchInfrastructure
+    }
     #envri-statics
     #print("Got %d Hits:" % result['hits']['total']['value'])
     #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
@@ -450,6 +578,7 @@ def genericsearch(request):
 
     return render(request,'webcontent_results.html',
                   {
+                   "facets":facets,
                    "results":lstResults,
                    "NumberOfHits": numHits,
                    "page_range": range(1,upperBoundPage),
