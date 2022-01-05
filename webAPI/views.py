@@ -60,6 +60,24 @@ def genericsearch(request):
         page = request.GET['page']
     except:
         page = 0
+
+    try:
+        filter = request.GET['filter']
+    except:
+        filter = ''
+
+    try:
+        facet = request.GET['facet']
+    except:
+        facet = ''
+
+
+    if filter!="" and facet!="":
+        request.session['filters'].append( {"term": {facet+".keyword": filter}})
+    else:
+        del request.session['filters']
+        request.session['filters']=[]
+
     page=(int(page)-1)*10
 
     result={}
@@ -67,9 +85,19 @@ def genericsearch(request):
         result = es.search(
             index="webapi",
             body={
-                "from" : page, "size" : 10,
+                "from" : page,
+                "size" : 10,
                 "query": {
-                    "match_all": {}
+                    "bool" : {
+                        "must" : {
+                            "match_all": {}
+                        },
+                        "filter": {
+                            "bool" : {
+                                "must" :request.session.get('filters')
+                            }
+                        }
+                    }
                 },
                 "aggs":aggregares
             }
@@ -79,21 +107,83 @@ def genericsearch(request):
         query_body = {
             "from" : page, "size" : 10,
             "query": {
-                "multi_match" : {
-                    "query": term,
-                    "fields": [ "name", "description", "category", "provider", "serviceType", "architecturalStyle"]
+                "bool": {
+                    "should": {
+                        "multi_match" : {
+                            "query": term,
+                            "fields": [ "name", "description", "category", "provider", "serviceType", "architecturalStyle"],
+                            "type": "best_fields",
+                            "minimum_should_match": "50%"
+                        }
+                    },
+                    "filter": {
+                        "bool" : {
+                            "must" :request.session.get('filters')
+                        }
+                    }
                 }
             },
             "aggs":aggregares
         }
+
         result = es.search(index="webapi", body=query_body)
     lstResults=[]
     for searchResult in result['hits']['hits']:
         lstResults.append(searchResult['_source'])
-
-    #print("Got %d Hits:" % result['hits']['total']['value'])
-    #return JsonResponse(result, safe=True, json_dumps_params={'ensure_ascii': False})
-
+    #......................
+    provider=[]
+    category=[]
+    sslSupprt=[]
+    architecturalStyle=[]
+    serviceType=[]
+    #......................
+    for searchResult in result['aggregations']['provider']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            pro={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            provider.append (pro)
+    #......................
+    for searchResult in result['aggregations']['category']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            cat={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            category.append (cat)
+    #......................
+    for searchResult in result['aggregations']['sslSupprt']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            ssl={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            sslSupprt.append (ssl)
+    #......................
+    for searchResult in result['aggregations']['architecturalStyle']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            arch={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            architecturalStyle.append (arch)
+    #......................
+    for searchResult in result['aggregations']['serviceType']['buckets']:
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+            service={
+                'key':searchResult['key'],
+                'doc_count': searchResult['doc_count']
+            }
+            serviceType.append (service)
+    #......................
+    facets={
+        'provider':provider,
+        'category':category,
+        'sslSupprt':sslSupprt,
+        'architecturalStyle':architecturalStyle,
+        'serviceType':serviceType
+    }
 
     numHits=result['hits']['total']['value']
 
@@ -103,12 +193,14 @@ def genericsearch(request):
 
     return render(request,'webapi_results.html',
                   {
+                      "facets":facets,
                       "results":lstResults,
                       "NumberOfHits": numHits,
                       "page_range": range(1,upperBoundPage),
                       "cur_page": (page/10+1)
                   }
                   )
+
 #-----------------------------------------------------------------------------------------------------------------------
 # Create your views here.
 def indexingpipeline(request):
