@@ -113,7 +113,6 @@ def genericsearch(request):
         del request.session['filters']
         request.session['filters']=[]
 
-
     page=(int(page)-1)*10
     result={}
     if term=="*" or term=="top10":
@@ -122,7 +121,6 @@ def genericsearch(request):
             body={
                 "from" : page,
                 "size" : 10,
-
                 "query": {
                     "bool" : {
                         "must" : {
@@ -141,10 +139,11 @@ def genericsearch(request):
     else:
         user_request = "some_param"
         query_body = {
-            "from" : page, "size" : 10,
+            "from" : page,
+            "size" : 10,
             "query": {
                 "bool": {
-                    "should": {
+                    "must": {
                         "multi_match" : {
                             "query": term,
                             "fields": [ "description", "keywords", "contact", "publisher", "citation",
