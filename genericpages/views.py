@@ -19,5 +19,6 @@ def genericpages(request):
     elif page=="graphV":
         return render(request,'graphBasedVisualization.html',{})
     elif page=="home":
+        request.session['filters']=[]
         return render(request,'landingpage.html',{})
 
