@@ -434,6 +434,7 @@ def genericsearch(request):
     else:
         if 'filters' in request.session:
             del request.session['filters']
+            print("filter is here")
         request.session['filters']=[]
 
     page=(int(page)-1)*10
