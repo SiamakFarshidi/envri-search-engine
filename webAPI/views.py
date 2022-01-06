@@ -108,7 +108,7 @@ def genericsearch(request):
             "from" : page, "size" : 10,
             "query": {
                 "bool": {
-                    "must": {
+                    "should": {
                         "multi_match" : {
                             "query": term,
                             "fields": [ "name", "description", "category", "provider", "serviceType", "architecturalStyle"],
