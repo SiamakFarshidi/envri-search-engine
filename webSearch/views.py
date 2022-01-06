@@ -433,8 +433,10 @@ def genericsearch(request):
         request.session['filters'].append( {"term": {facet+".keyword": filter}})
     else:
         if 'filters' in request.session:
-            del request.session['filters']
+            print("----------------------------------------")
             print("filter is here")
+            print("----------------------------------------")
+            del request.session['filters']
         request.session['filters']=[]
 
     page=(int(page)-1)*10
