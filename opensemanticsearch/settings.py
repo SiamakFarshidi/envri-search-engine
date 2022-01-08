@@ -148,3 +148,12 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+# File Based
+SESSION_ENGINE = "django.contrib.sessions.backends.file"
+
+# Works In Combination With  Current Cache and Database, fairly persistant
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+
+# Cookie Based, Browser Clearing Will lose it.
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
