@@ -352,8 +352,11 @@
                                                     <div class="card-header">
 
                                                         <h5 class="m-b-10 titleTrimming">
-
+                                                            {% if 'json' in resultItem.url.0 %}
+                                                            <a href="{{ resultItem.url.0|slice:':-4' }}" target="_blank"  style="color:darkblue;">
+                                                                {% else %}
                                                             <a href="{{ resultItem.url.0 }}" target="_blank"  style="color:darkblue;">
+                                                                {% endif %}
                                                                 <img src="{% static 'images/datasetlogo.png' %}" style="width:15px; left: 10px; margin-right:6px;"/>
                                                             {%for name in resultItem.name %}
                                                                 {% if name != resultItem.ResearchInfrastructure.0 %}

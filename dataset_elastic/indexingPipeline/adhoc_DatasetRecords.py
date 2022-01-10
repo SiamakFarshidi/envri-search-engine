@@ -1371,11 +1371,17 @@ def open_file(file):
 def Run_indexingPipeline_ICOS():
     print("indexing the ICOS dataset repository has been started!")
     getDatasetRecords__ICOS()
+    cnt=1
     # ........................................
     lstDataset= getOnlineDatasetRecords__ICOS(False,10,1)
     for datasetURL in lstDataset:
-        datasetProcessing_ICOS(datasetURL)
-        # ........................................
+        if not(if_URL_exist(datasetURL)):
+            datasetProcessing_ICOS(datasetURL)
+            print("\n ICOS ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
+        else :
+            print(datasetURL)
+        cnt=cnt+1
+    # ........................................
         deleteAllIndexFilesByExtension(".csv")
         Run_indexingPipeline_ingest_indexFiles()
     print("The indexing process has been finished!")
@@ -1383,10 +1389,16 @@ def Run_indexingPipeline_ICOS():
 def Run_indexingPipeline_SeaDataNet_EDMED():
     print("indexing the SeaDataNet EDMED dataset repository has been started!")
     getDatasetRecords__SeaDataNet_EDMED()
+    cnt=1
     # ........................................
     lstDataset= getOnlineDatasetRecords__SeaDataNet_EDMED(False,10,1)
     for datasetURL in lstDataset:
-        datasetProcessing_SeaDataNet_EDMED(datasetURL)
+        if not(if_URL_exist(datasetURL)):
+            datasetProcessing_SeaDataNet_EDMED(datasetURL)
+            print("\n EDMED ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
+        else :
+            print(datasetURL)
+        cnt=cnt+1
     # ........................................
         deleteAllIndexFilesByExtension(".csv")
         Run_indexingPipeline_ingest_indexFiles()
@@ -1396,10 +1408,16 @@ def Run_indexingPipeline_SeaDataNet_CDI():
     print("indexing the SeaDataNet CDI dataset repository has been started!")
     getDatasetRecords__SeaDataNet_CDI()
     # ........................................
+    cnt=1
     lstDataset= getOnlineDatasetRecords__SeaDataNet_CDI(False,10,1)
     for datasetURL in lstDataset:
-        datasetProcessing_SeaDataNet_CDI(datasetURL)
-    # ........................................
+        if not(if_URL_exist(datasetURL)):
+            datasetProcessing_SeaDataNet_CDI(datasetURL)
+            print("\n CDI ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
+        else :
+            print(datasetURL)
+        cnt=cnt+1
+        # ........................................
         deleteAllIndexFilesByExtension(".csv")
         Run_indexingPipeline_ingest_indexFiles()
     print("The indexing process has been finished!")
@@ -1410,7 +1428,12 @@ def Run_indexingPipeline_LifeWatch():
     # ........................................
     lstDataset= getOnlineDatasetRecords__LifeWatch(False,1,1)
     for datasetURL in lstDataset:
-        datasetProcessing_LifeWatch(datasetURL)
+        if not(if_URL_exist(datasetURL)):
+            datasetProcessing_LifeWatch(datasetURL)
+            print("\n LifeWatch ----> \n Record: "+str(cnt)+"\n ----> \n")
+            cnt=cnt+1
+        else :
+            print(datasetURL)
     # ........................................
         deleteAllIndexFilesByExtension(".csv")
         Run_indexingPipeline_ingest_indexFiles()
@@ -1425,6 +1448,45 @@ def deleteAllIndexFilesByExtension(extension):
         path_to_file = os.path.join(directory, file)
         os.remove(path_to_file)
 # ----------------------------------------------------------------------
+def if_URL_exist(url):
+    es = Elasticsearch("http://localhost:9200")
+    index = Index('envri', es)
+
+    if not es.indices.exists(index='envri'):
+        index.settings(
+            index={'mapping': {'ignore_malformed': True}}
+        )
+        index.create()
+    else:
+        es.indices.close(index='envri')
+        put = es.indices.put_settings(
+            index='envri',
+            body={
+                "index": {
+                    "mapping": {
+                        "ignore_malformed": True
+                    }
+                }
+            })
+        es.indices.open(index='envri')
+
+    user_request = "some_param"
+    query_body = {
+        "query": {
+            "bool": {
+                "must": [{
+                    "match_phrase": {
+                        "url": url
+                    }
+                }]
+            }
+        },
+        "from": 0,
+        "size": 1
+    }
+    result = es.search(index="envri", body=query_body)
+    numHits=result['hits']['total']['value']
+    return True if numHits>0 else False
 
 #getDatasetRecords__SeaDataNet_EDMED()
 #getDatasetRecords__SeaDataNet_CDI()
@@ -1464,18 +1526,8 @@ def deleteAllIndexFilesByExtension(extension):
 #invertedIndexing("SeaDataNet_EDMED_")
 #invertedIndexing("ICOS_")
 #--------------------
-try:
-    Run_indexingPipeline_SeaDataNet_CDI()
-except:
-    print("Error with CDI")
+#Run_indexingPipeline_SeaDataNet_CDI()
+#Run_indexingPipeline_SeaDataNet_EDMED()
+#Run_indexingPipeline_ICOS()
 
-try:
-    Run_indexingPipeline_SeaDataNet_EDMED()
-except:
-    print("Error with EDMED")
-
-try:
-    Run_indexingPipeline_ICOS()
-except:
-    print("Error with ICOS")
 #--------------------
