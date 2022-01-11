@@ -83,7 +83,7 @@ def getDatasetRecords__LifeWatch():
 def getDatasetRecords__SeaDataNet_EDMED():
     with urllib.request.urlopen('https://edmed.seadatanet.org/sparql/sparql?query=select+%3FEDMEDRecord+%3FTitle+where+%7B%3FEDMEDRecord+a+%3Chttp%3A%2F%2Fwww.w3.org%2Fns%2Fdcat%23Dataset%3E+%3B+%3Chttp%3A%2F%2Fpurl.org%2Fdc%2Fterms%2Ftitle%3E+%3FTitle+.%7D+&output=json&stylesheet=') as f:
         data = f.read().decode('utf-8')
-    json_data = json.loads(data)
+    json_data = json.loads(r''+data)
     indexFile= open(MetaDataRecordPath+SeaDataNet_EDMED__MetadataRecordsFileName,"w+")
     indexFile.write(json.dumps(json_data))
     indexFile.close()
@@ -102,7 +102,7 @@ def getDatasetRecords__ICOS():
     lCmd = shlex.split(cURL) # Splits cURL into an array
     p = subprocess.Popen(lCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate() # Get the output and the err message
-    json_data = json.loads(out.decode("utf-8"))
+    json_data = json.loads(r''+out.decode("utf-8"))
     indexFile= open(MetaDataRecordPath+ICOS__MetadataRecordsFileName,"w+")
     indexFile.write(json.dumps(json_data))
     indexFile.close()
@@ -132,7 +132,7 @@ def getOnlineDatasetRecords__LifeWatch(rnd,genRnd,startingPoint):
 #----------------------------------------------------------------------------------------
 def getOnlineDatasetRecords__ICOS(rnd,genRnd,startingPoint):
     indexFile= open(MetaDataRecordPath+ICOS__MetadataRecordsFileName,"r")
-    dataset_json = json.loads(indexFile.read())
+    dataset_json = json.loads(r''+indexFile.read())
 
     cnt=1
     random_selection= random.sample(range(startingPoint, len(dataset_json["results"]["bindings"])), genRnd)
@@ -165,7 +165,7 @@ import random
 
 def getOnlineDatasetRecords__SeaDataNet_EDMED(rnd,genRnd,startingPoint):
     indexFile= open(MetaDataRecordPath+SeaDataNet_EDMED__MetadataRecordsFileName,"r")
-    dataset_json = json.loads(indexFile.read())
+    dataset_json = json.loads(r''+indexFile.read())
     cnt=1
     random_selection= random.sample(range(startingPoint, len(dataset_json["results"]["bindings"])), genRnd)
     c=0
@@ -203,7 +203,7 @@ def getOnlineDatasetRecords__SeaDataNet_CDI(rnd,genRnd,startingPoint):
 #----------------------------------------------------------------------------------------
 def getRI(dataset_JSON):
     RI_content = open(RI_root,"r")
-    RI_json = json.loads(RI_content.read())
+    RI_json = json.loads(r''+RI_content.read())
     dataset_content=extractTextualContent(dataset_JSON)
     for RI in RI_json:
         for RI_keys in RI_json[RI]:
@@ -213,7 +213,7 @@ def getRI(dataset_JSON):
 #----------------------------------------------------------------------------------------
 def getDomain(RI_seed):
     domain_content = open(domain_root,"r")
-    domain_json = json.loads(domain_content.read())
+    domain_json = json.loads(r''+domain_content.read())
     for RI in domain_json:
         if RI == RI_seed:
             return domain_json[RI]
@@ -300,7 +300,7 @@ def getSimilarEssentialVariables(essentialVariables, topics):
 #----------------------------------------------------------------------------------------
 def getDomainEssentialVariables(domain):
     essentialVariabels_content = open(essentialVariabels_root,"r")
-    essentialVariabels_json = json.loads(essentialVariabels_content.read())
+    essentialVariabels_json = json.loads(r''+essentialVariabels_content.read())
     for domainVar in essentialVariabels_json:
         if domain==domainVar:
             return essentialVariabels_json[domain]
@@ -507,7 +507,7 @@ def searchField(field,datatype,json):
 def getTopicsByDomainVocabulareis(topics,domain):
     Vocabs=[]
     domainVocbularies_content = open(domainVocbularies_root,"r")
-    domainVocbularies_object = json.loads(domainVocbularies_content.read())
+    domainVocbularies_object = json.loads(r''+domainVocbularies_content.read())
     for vocab in domainVocbularies_object[domain]:
         for topic in topics:
             w1=spacy_nlp(topic.lower())
@@ -519,7 +519,7 @@ def getTopicsByDomainVocabulareis(topics,domain):
 #----------------------------------------------------------------------------------------
 def datasetProcessing_ICOS(datasetURL):
     metadataStar_content = open(metadataStar_root,"r")
-    metadataStar_object = json.loads(metadataStar_content.read())
+    metadataStar_object = json.loads(r''+metadataStar_content.read())
     unique_filename = str(uuid.uuid4())
     indexfname = os.path.join(indexFiles_root,"ICOS_"+unique_filename)
     indexFile= open(indexfname+".json","w+")
@@ -546,7 +546,7 @@ def datasetProcessing_ICOS(datasetURL):
             start = script.find('<script type="application/ld+json">') + len('<script type="application/ld+json">')
             end = script.find("</script>")
             script = script[start:end]
-            JSON=json.loads(script)
+            JSON=json.loads(r''+script)
             RI=""
             domains=""
             topics=[]
@@ -646,7 +646,7 @@ def getValueHTML_SeaDataNet(searchTerm, datasetContents):
 #----------------------------------------------------------------------------------------
 def datasetProcessing_SeaDataNet_EDMED(datasetURL):
     metadataStar_content = open(metadataStar_root,"r")
-    metadataStar_object = json.loads(metadataStar_content.read())
+    metadataStar_object = json.loads(r''+metadataStar_content.read())
     unique_filename = str(uuid.uuid4())
     indexfname = os.path.join(indexFiles_root,"SeaDataNet_EDMED_"+unique_filename)
     indexFile= open(indexfname+".json","w+")
@@ -847,10 +847,10 @@ def getContextualText_ICOS(JSON):
 #----------------------------------------------------------------------------------------
 def datasetProcessing_SeaDataNet_CDI(datasetURL):
     metadataStar_content = open(metadataStar_root,"r")
-    metadataStar_object = json.loads(metadataStar_content.read())
+    metadataStar_object = json.loads(r''+metadataStar_content.read())
     with urllib.request.urlopen(datasetURL) as f:
         data = f.read().decode('utf-8')
-    JSON=json.loads(data)
+    JSON=json.loads(r''+data)
 
     unique_filename = str(uuid.uuid4())
     indexfname = os.path.join(indexFiles_root,"SeaDataNet_CDI_"+unique_filename)
@@ -989,7 +989,7 @@ def invertedIndexing(datasetTitle):
     hashtable={}
     for indexFile in lstIndexFileNames:
         indexFile_content = open(indexFile,"r")
-        indexFile_object = json.loads(indexFile_content.read())
+        indexFile_object = json.loads(r''+indexFile_content.read())
         lstKeywords.append(indexFile_object["keywords"])
         lstEssentialVariables.append(indexFile_object["EssentialVariables"])
         lstPotentialTopics.append(indexFile_object["potentialTopics"])
@@ -1020,7 +1020,7 @@ def invertedIndexing(datasetTitle):
         lstPotentialTopics.clear()
 
         indexFile_content = open(indexFile,"r")
-        indexFile_object = json.loads(indexFile_content.read())
+        indexFile_object = json.loads(r''+indexFile_content.read())
         lstKeywords.append(indexFile_object["keywords"])
         lstEssentialVariables.append(indexFile_object["EssentialVariables"])
         lstPotentialTopics.append(indexFile_object["potentialTopics"])
@@ -1069,16 +1069,16 @@ def invertedIndexing(datasetTitle):
 #----------------------------------------------------------------------------------------
 def datasetProcessing_SeaDataNet_CDI_XML(datasetURL):
     metadataStar_content = open(metadataStar_root,"r")
-    metadataStar_object = json.loads(metadataStar_content.read())
+    metadataStar_object = json.loads(r''+metadataStar_content.read())
     with urllib.request.urlopen(datasetURL) as f:
         data = f.read().decode('utf-8')
     data=data.replace("xml:","").replace("eml:","").replace("namespace:","").replace("xmlns:","").replace("gmd:","").replace("gco:","").replace("sdn:","").replace("gml:","").replace("gts:","").replace("xlink:","").replace("\"{","")
     xml = fromstring(data.encode())
-    JSON=json.loads(json.dumps(xmljson.badgerfish.data(xml)),cls=Decoder)
+    JSON=json.loads(r''+json.dumps(xmljson.badgerfish.data(xml)),cls=Decoder)
 #----------------------------------------------------------------------------------------
 def datasetProcessing_LifeWatch(datasetURL):
     metadataStar_content = open(metadataStar_root,"r")
-    metadataStar_object = json.loads(metadataStar_content.read())
+    metadataStar_object = json.loads(r''+metadataStar_content.read())
 
     unique_filename = str(uuid.uuid4())
     indexfname = os.path.join(indexFiles_root,"LifeWatch_"+unique_filename)
@@ -1365,7 +1365,7 @@ def Run_indexingPipeline_ingest_indexFiles():
 def open_file(file):
     read_path = file
     with open(read_path, "r", errors='ignore') as read_file:
-        data = json.load(read_file)
+        data = json.loads(r''+read_file)
     return data
 # ----------------------------------------------------------------------
 def Run_indexingPipeline_ICOS():
@@ -1376,11 +1376,8 @@ def Run_indexingPipeline_ICOS():
     lstDataset= getOnlineDatasetRecords__ICOS(False,10,1)
     for datasetURL in lstDataset:
         if not(if_URL_exist(datasetURL)):
-            try:
-                datasetProcessing_ICOS(datasetURL)
-                print("\n ICOS ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
-            except:
-                print("Error happend!")
+            datasetProcessing_ICOS(datasetURL)
+            print("\n ICOS ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
         else :
             print(datasetURL)
         cnt=cnt+1
