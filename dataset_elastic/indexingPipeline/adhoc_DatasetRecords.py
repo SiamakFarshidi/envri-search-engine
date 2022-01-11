@@ -1365,7 +1365,7 @@ def Run_indexingPipeline_ingest_indexFiles():
 def open_file(file):
     read_path = file
     with open(read_path, "r", errors='ignore') as read_file:
-        data = json.loads(r''+read_file)
+        data = json.load(read_file)
     return data
 # ----------------------------------------------------------------------
 def Run_indexingPipeline_ICOS():
