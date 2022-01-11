@@ -1376,8 +1376,11 @@ def Run_indexingPipeline_ICOS():
     lstDataset= getOnlineDatasetRecords__ICOS(False,10,1)
     for datasetURL in lstDataset:
         if not(if_URL_exist(datasetURL)):
-            datasetProcessing_ICOS(datasetURL)
-            print("\n ICOS ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
+            try:
+                datasetProcessing_ICOS(datasetURL)
+                print("\n ICOS ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
+            except:
+                print("Error happend!")
         else :
             print(datasetURL)
         cnt=cnt+1
