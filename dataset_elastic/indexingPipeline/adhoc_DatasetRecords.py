@@ -523,7 +523,7 @@ def datasetProcessing_ICOS(datasetURL):
     unique_filename = str(uuid.uuid4())
     indexfname = os.path.join(indexFiles_root,"ICOS_"+unique_filename)
     indexFile= open(indexfname+".json","w+")
-
+    essentialVariables=[]
     logfile = os.path.join(indexFiles_root,"logfile.csv")
     CSVvalue=""
     if not os.path.exists(logfile):
@@ -1247,7 +1247,7 @@ def pruneExtractedContextualInformation(drivedValues, originalValues):
 #----------------------------------------------------------------------------------------
 def metadataRecord_similarity_evaluation(filename, drivedField, originalFields, SetOfPotentialValues):
     dataset_content = open(filename,"r")
-    dataset_object = json.loads(dataset_content.read())
+    dataset_object = json.loads(r''+dataset_content.read())
 
     similarityDic={}
     ScoreSim={}
@@ -1525,6 +1525,9 @@ def if_URL_exist(url):
 #invertedIndexing("LifeWatch_")
 #invertedIndexing("SeaDataNet_EDMED_")
 #invertedIndexing("ICOS_")
+#--------------------
+deleteAllIndexFilesByExtension(".json")
+deleteAllIndexFilesByExtension(".csv")
 #--------------------
 #Run_indexingPipeline_SeaDataNet_CDI()
 #Run_indexingPipeline_SeaDataNet_EDMED()

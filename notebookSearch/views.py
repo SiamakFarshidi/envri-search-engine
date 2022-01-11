@@ -38,7 +38,7 @@ def genericsearch(request):
     #search_projects_Gitlab(term)
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
-    return render(request,'webapi_results.html',response_data)
+    return render(request,'notebook_results.html',response_data)
 
 #-------------------------------------------------------------------------------------------
 def search_projects_Gitlab(keyword):
