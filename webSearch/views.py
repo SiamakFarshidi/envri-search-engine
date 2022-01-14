@@ -23,6 +23,193 @@ import numpy as np
 nltk.download('words')
 words = set(nltk.corpus.words.words())
 
+
+ResearchInfrastructures={
+    'icos-cp.eu': {
+        'id': 1,
+        'url':'https://www.icos-cp.eu/',
+        'label': 'Multi-domain',
+        'title': 'Integrated Carbon Observation System',
+        'acronym':'ICOS'
+    },
+    'seadatanet.org': {
+        'id': 2,
+        'url':'https://www.seadatanet.org/',
+        'label': 'Marine',
+        'title': 'Pan-European infrastructure for ocean and marine data management',
+        'acronym':'SeaDataNet'
+    },
+    'lifewatch.eu': {
+        'id': 3,
+        'url':'https://www.lifewatch.eu/',
+        'label': 'Multi-domain',
+        'title': 'An e-Infrastructure for basic research on biodiversity and ecosystems',
+        'acronym':'LifeWatch'
+    },
+    'anaee.eu':{
+        'id': 4,
+        'url':'https://www.anaee.eu/',
+        'label': 'Terrestrial ecosystem / Biodiversity',
+        'title': 'Analysis and Experimentation on Ecosystems',
+        'acronym':'AnaEE'
+    },
+    'actris.eu':{
+        'id': 5,
+        'url':'https://www.actris.eu/',
+        'label': 'Atmospheric',
+        'title': 'The Aerosol, Clouds and Trace Gases Research Infrastructure',
+        'acronym':'ACTRIS'
+    },
+    'aquacosm.eu':{
+        'id': 6,
+        'url':'https://www.aquacosm.eu/',
+        'label': 'Marine / Freshwater',
+        'title': 'EU network of mesocosms facilities for research on marine and freshwater',
+        'acronym':'AQUACOSM'
+    },
+    'arise-project.eu':{
+        'id': 7,
+        'url':'http://arise-project.eu/',
+        'label': 'Atmosphere',
+        'title': 'Atmospheric dynamics Research InfraStructure in Europe',
+        'acronym':'ARISE'
+    },
+    'danubius-pp.eu':{
+        'id': 8,
+        'url':'https://danubius-pp.eu/',
+        'label': 'River / Marine',
+        'title': 'Preparatory Phase For The Paneuropean Research Infrastructure',
+        'acronym':'DANUBIUS-RI'
+    },
+    'dissco.eu':{
+        'id': 9,
+        'url':'https://www.dissco.eu/',
+        'label': 'Terrestrial ecosystem / Biodiversity',
+        'title': 'Distributed System of Scientific Collections',
+        'acronym':'DiSSCo'
+    },
+    'eiscat.se':{
+        'id': 10,
+        'url':'https://eiscat.se/',
+        'label': 'Atmospheric',
+        'title': 'EISCAT Scientific Association',
+        'acronym':'EISCAT 3D'
+    },
+    'lter-europe.net':{
+        'id': 11,
+        'url':'https://www.lter-europe.net/',
+        'label': 'Biodiversity / Ecosystems',
+        'title': 'Long-Term Ecosystem Research in Europe',
+        'acronym':'eLTER RI'
+    },
+    'embrc.eu':{
+        'id': 12,
+        'url':'https://www.embrc.eu/',
+        'label': 'Marine / Biodiversity',
+        'title': 'Long-Term Ecosystem Research in Europe',
+        'acronym':'EMBRC'
+    },
+    'emso.eu':{
+        'id': 13,
+        'url':'https://emso.eu/',
+        'label': 'Multi-domain',
+        'title': 'European Multidisciplinary Seafloor and water column Observatory',
+        'acronym':'EMSO'
+    },
+    'emphasis.plant-phenotyping.eu':{
+        'id': 14,
+        'url':'https://emphasis.plant-phenotyping.eu/',
+        'label': 'Terrestrial Ecosystem',
+        'title': 'European Infrastructure for Plant Phenotyping',
+        'acronym':'EMPHASIS'
+    },
+    'epos-eu.org':{
+        'id': 15,
+        'url':'https://www.epos-eu.org/',
+        'label': 'Solid Earth Science',
+        'title': 'European Plate Observing System',
+        'acronym':'EPOS'
+    },
+    'eufar.net':{
+        'id': 16,
+        'url':'https://www.eufar.net/',
+        'label': 'Atmospheric',
+        'title': 'The EUropean Facility for Airborne Research',
+        'acronym':'EUFAR'
+    },
+    'euro-argo.eu':{
+        'id': 17,
+        'url':'https://www.euro-argo.eu/',
+        'label': 'Marine',
+        'title': 'European Research Infrastructure Consortium for observing the Ocean',
+        'acronym':'Euro-Argo ERIC'
+    },
+    'eurofleet.fr':{
+        'id': 18,
+        'url':'https://www.eurofleet.fr/',
+        'label': 'Marine',
+        'title': 'An alliance of European marine research infrastructure to meet the evolving needs of the research and industrial communities',
+        'acronym':'EUROFLEETS+'
+    },
+    'eurogoos.eu':{
+        'id': 19,
+        'url':'https://eurogoos.eu/',
+        'label': 'Marine',
+        'title': 'European Global Ocean Observing System',
+        'acronym':'EuroGOOS'
+    },
+    'eurochamp.org':{
+        'id': 20,
+        'url':'https://www.eurochamp.org/',
+        'label': 'Atmospheric',
+        'title': 'Integration of European Simulation Chambers for Investigating Atmospheric Processes',
+        'acronym':'EUROCHAMP'
+    },
+    'hemera-h2020.eu':{
+        'id': 21,
+        'url':'https://www.hemera-h2020.eu/',
+        'label': 'Atmospheric',
+        'title': 'Integrated access to balloon-borne platforms for innovative research and technology',
+        'acronym':'HEMERA'
+    },
+    'iagos.org':{
+        'id': 22,
+        'url':'https://www.iagos.org/',
+        'label': 'Atmospheric',
+        'title': 'In Service Aircraft for a Global Observing System',
+        'acronym':'IAGOS'
+    },
+    'eu-interact.org':{
+        'id': 23,
+        'url':'https://eu-interact.org/',
+        'label': 'Terrestrial Ecosystem',
+        'title': 'Building Capacity For Environmental Research And Monitoring In Arctic And Neighbouring Alpine And Forest Areas',
+        'acronym':'INTERACT'
+    },
+    'is.enes.org':{
+        'id': 24,
+        'url':'https://is.enes.org/',
+        'label': 'Multi-domain',
+        'title': 'Infrastructure For The European Network For Earth System Modelling Enes',
+        'acronym':'IS-ENES'
+    },
+    'jerico-ri.eu':{
+        'id': 25,
+        'url':'https://www.jerico-ri.eu/',
+        'label': 'Marine',
+        'title': 'The European Integrated Infrastructure For In Situ Coastal Observation',
+        'acronym':'JERICO-RI'
+    },
+    'sios-svalbard.org':{
+        'id': 26,
+        'url':'https://www.sios-svalbard.org/',
+        'title': 'Multi-domain',
+        'title': 'Svalbard integrated Earth observing system',
+        'acronym':'SIOS'
+    }
+}
+
+
 aggregares={
     "locations":{
         "terms":{
@@ -350,7 +537,6 @@ def saveRecord(doc):
     else:
         _text_=["N/A"]
     #........................................................
-    bagOfWords= title_txt+organization_ss+producer_ss+_text_
     webFeatures={
         "title":title_txt,
         "organizations": organization_ss,
@@ -367,22 +553,18 @@ def saveRecord(doc):
         "file_formats":dc_format_ss,
         "file_size":File_Size_ss,
         "text":_text_,
-        "ResearchInfrastructure":getResearchInfrastructure(bagOfWords)
+        "ResearchInfrastructure":getResearchInfrastructure(id[0])
     }
     res = es.index(index="webcontents", id= id, body=webFeatures)
     es.indices.refresh(index="webcontents")
 #----------------------------------------------------------------------------------------------------------------------- envri-search-engine
-def getResearchInfrastructure(bagOfWords):
-    ResearchInfrastructure=[]
-    RI_list={"ICOS", "LifeWatch", "AnaEE", "AQUACOSM", "ARISE", "DANUBIUS-RI",
-             "DiSSCo", "EISCAT_3D", "eLTER RI", "EMBRC", "EMSO", "EMPHASIS",
-             "EPOS", "EUFAR", "Euro-Argo ERIC", "EUROFLEETS+", "EuroGOOS", "EUROCHAMP",
-             "HEMERA", "IAGOS", "INTERACT", "IS-ENES", "JERICO-RI", "SeaDataNet", "SIOS" }
-    for BoW in bagOfWords:
-        for RI in RI_list:
-            if RI.lower() in BoW.lower() and RI not in ResearchInfrastructure:
-                ResearchInfrastructure.append(RI)
-    return ResearchInfrastructure
+def getResearchInfrastructure(url):
+    lstRI=[]
+    for RI in ResearchInfrastructures:
+        if RI in url:
+            if(ResearchInfrastructures[RI]['acronym'] not in lstRI):
+                lstRI.append(ResearchInfrastructures[RI]['acronym'])
+    return lstRI
 #----------------------------------------------------------------------------------------------------------------------- envri-search-engine
 def textCleansing(txt):
     if type(txt)==str:
@@ -433,9 +615,6 @@ def genericsearch(request):
         request.session['filters'].append( {"term": {facet+".keyword": filter}})
     else:
         if 'filters' in request.session:
-            print("----------------------------------------")
-            print("filter is here")
-            print("----------------------------------------")
             del request.session['filters']
         request.session['filters']=[]
 
@@ -494,6 +673,7 @@ def genericsearch(request):
         result = es.search(index="webcontents", body=query_body)
     lstResults=[]
     for searchResult in result['hits']['hits']:
+        searchResult['_source']['ResearchInfrastructure']= getResearchInfrastructure(searchResult['_source']['id'][0])
         lstResults.append(searchResult['_source'])
 
     #......................
@@ -586,7 +766,8 @@ def genericsearch(request):
                    "results":lstResults,
                    "NumberOfHits": numHits,
                    "page_range": range(1,upperBoundPage),
-                   "cur_page": (page/10+1)
-                   }
+                   "cur_page": (page/10+1),
+                   "searchTerm":term
+                  }
                   )
 #-----------------------------------------------------------------------------------------------------------------------

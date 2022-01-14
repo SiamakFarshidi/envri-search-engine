@@ -181,7 +181,7 @@ def genericsearch(request):
     measurementTechnique=[]
     #......................
     for searchResult in result['aggregations']['ResearchInfrastructure']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!=""):
             RI={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -189,7 +189,7 @@ def genericsearch(request):
             ResearchInfrastructure.append (RI)
     #......................
     for searchResult in result['aggregations']['spatialCoverage']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1)):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!="" and int(searchResult['doc_count']>1)):
             SC={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -197,7 +197,7 @@ def genericsearch(request):
             spatialCoverage.append (SC)
         #......................
     for searchResult in result['aggregations']['theme']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1)):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!="" and int(searchResult['doc_count']>1)):
             Th={
                     'key':searchResult['key'],
                     'doc_count': searchResult['doc_count']
@@ -205,7 +205,7 @@ def genericsearch(request):
             theme.append (Th)
     #......................
     for searchResult in result['aggregations']['publisher']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1 )):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!="" and int(searchResult['doc_count']>1 )):
             Pub={
                     'key':searchResult['key'],
                     'doc_count': searchResult['doc_count']
@@ -213,7 +213,7 @@ def genericsearch(request):
             publisher.append (Pub)
     #......................
     for searchResult in result['aggregations']['measurementTechnique']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="" and int(searchResult['doc_count']>1 )):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!="" and int(searchResult['doc_count']>1 )):
             meT={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -244,7 +244,8 @@ def genericsearch(request):
                       "results":lstResults,
                       "NumberOfHits": numHits,
                       "page_range": range(1,upperBoundPage),
-                      "cur_page": (page/10+1)
+                      "cur_page": (page/10+1),
+                      "searchTerm":term
                   }
                   )
 #----------------------------------------------------------------------------------------

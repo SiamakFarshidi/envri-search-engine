@@ -139,7 +139,7 @@ def genericsearch(request):
     serviceType=[]
     #......................
     for searchResult in result['aggregations']['provider']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!=""):
             pro={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -147,7 +147,7 @@ def genericsearch(request):
             provider.append (pro)
     #......................
     for searchResult in result['aggregations']['category']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!=""):
             cat={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -155,7 +155,7 @@ def genericsearch(request):
             category.append (cat)
     #......................
     for searchResult in result['aggregations']['sslSupprt']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!=""):
             ssl={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -163,7 +163,7 @@ def genericsearch(request):
             sslSupprt.append (ssl)
     #......................
     for searchResult in result['aggregations']['architecturalStyle']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!=""):
             arch={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -171,7 +171,7 @@ def genericsearch(request):
             architecturalStyle.append (arch)
     #......................
     for searchResult in result['aggregations']['serviceType']['buckets']:
-        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!=""):
+        if(searchResult['key']!="None" and searchResult['key']!="unknown" and searchResult['key']!="Unknown" and searchResult['key']!="Data" and searchResult['key']!="Unspecified" and searchResult['key']!=""):
             service={
                 'key':searchResult['key'],
                 'doc_count': searchResult['doc_count']
@@ -198,7 +198,8 @@ def genericsearch(request):
                       "results":lstResults,
                       "NumberOfHits": numHits,
                       "page_range": range(1,upperBoundPage),
-                      "cur_page": (page/10+1)
+                      "cur_page": (page/10+1),
+                      "searchTerm":term
                   }
                   )
 

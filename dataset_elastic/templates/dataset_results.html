@@ -147,7 +147,7 @@
                         <div class="pcoded-navigatio-lavel" data-i18n="nav.category.navigation">Search Space</div>
                         <ul class="pcoded-item pcoded-left-item">
                             <li class="">
-                                <a href="../webSearch/genericsearch?term=top10&page=1" onclick="clearSearchBoxes();">
+                                <a href="../webSearch/genericsearch?term={{ searchTerm }}&page=1" >
                                     <span class="pcoded-micon"><i class="ti-world"></i><b>D</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.dash.main">Webpages</span>
                                     <span class="pcoded-mcaret"></span>
@@ -248,35 +248,35 @@
                                 </ul>
                             </li>
                             <li class="">
-                                <a href="../webAPI/genericsearch?term=top10&page=1" onclick="clearSearchBoxes();">
+                                <a href="../webAPI/genericsearch?term={{ searchTerm }}&page=1" >
                                     <span class="pcoded-micon"><i class="ti-control-shuffle"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Web APIs</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:void(0)" onclick="clearSearchBoxes();">
+                                <a href="javascript:void(0)" >
                                     <span class="pcoded-micon"><i class="ti-package"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Notebooks</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:void(0)" onclick="clearSearchBoxes();">
+                                <a href="javascript:void(0)" >
                                     <span class="pcoded-micon"><i class="ti-menu-alt"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Catalogs</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:void(0)" onclick="clearSearchBoxes();">
+                                <a href="javascript:void(0)" >
                                     <span class="pcoded-micon"><i class="ti-linux"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Software</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:void(0)" onclick="clearSearchBoxes();">
+                                <a href="javascript:void(0)" >
                                     <span class="pcoded-micon"><i class="ti-gallery"></i></span>
                                     <span class="pcoded-mtext"  data-i18n="nav.dash.main">Images</span>
                                     <span class="pcoded-mcaret"></span>
@@ -286,14 +286,14 @@
                         <div class="pcoded-navigatio-lavel" data-i18n="nav.category.forms">Visualization</div>
                         <ul class="pcoded-item pcoded-left-item">
                             <li>
-                                <a href="javascript:void(0)">
+                                <a href="../genericpages/genericpages?page=graphV&term={{ searchTerm }}">
                                     <span class="pcoded-micon"><i class="ti-vector"></i><b>FC</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Graph based</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="clearSearchBoxes();">
+                                <a href="../genericpages/genericpages?page=pieChart&term={{ searchTerm }}">
                                     <span class="pcoded-micon"><i class="ti-pie-chart"></i><b>FC</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Pie chart</span>
                                     <span class="pcoded-mcaret"></span>
@@ -305,21 +305,21 @@
                         <div class="pcoded-navigatio-lavel" data-i18n="nav.category.forms">Info</div>
                         <ul class="pcoded-item pcoded-left-item">
                             <li>
-                                <a href="../genericpages/genericpages?page=publications" onclick="clearSearchBoxes();">
+                                <a href="../genericpages/genericpages?page=publications&term={{ searchTerm }}" >
                                     <span class="pcoded-micon"><i class="ti-write"></i><b>FC</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Publications</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="../genericpages/genericpages?page=RnD" onclick="clearSearchBoxes();">
+                                <a href="../genericpages/genericpages?page=RnD&term={{ searchTerm }}" >
                                     <span class="pcoded-micon"><i class="ti-user"></i><b>FC</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">R&amp;D team</span>
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="map-google.html"  onclick="clearSearchBoxes();">
+                                <a href="map-google.html"  >
                                     <span class="pcoded-micon"><i class="ti-comments"></i><b>FC</b></span>
                                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Feedback</span>
                                     <span class="pcoded-mcaret"></span>

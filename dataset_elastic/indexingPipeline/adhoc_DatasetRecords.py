@@ -613,6 +613,10 @@ def datasetProcessing_ICOS(datasetURL):
                     if txtVal!="":
                         originalValues.append(txtVal)
 
+                if (metadata_property=="landingPage"):
+                    flattenValue="[]"
+
+
                 indexFile.write("\""+str(metadata_property)+"\" :"+
                                 flattenValue.replace("']","\"]").replace("['","[\"").replace("',","\",").replace(", '",", \"").replace("\"\"","\"")
                                 +extrachar)
@@ -1246,6 +1250,10 @@ def pruneExtractedContextualInformation(drivedValues, originalValues):
     return lstAcceptedValues
 #----------------------------------------------------------------------------------------
 def metadataRecord_similarity_evaluation(filename, drivedField, originalFields, SetOfPotentialValues):
+    #--------------Turn off
+    return 0,0,0,0
+    #--------------
+
     dataset_content = open(filename,"r")
     dataset_object = json.loads(r''+dataset_content.read())
 
@@ -1375,7 +1383,7 @@ def Run_indexingPipeline_ICOS():
     # ........................................
     lstDataset= getOnlineDatasetRecords__ICOS(False,10,1)
     for datasetURL in lstDataset:
-        if not(if_URL_exist(datasetURL) and datasetURL !="https://meta.icos-cp.eu/objects/0ST81nXCND5VfAQdOCSJDveT"):
+        if not(if_URL_exist(datasetURL)):
             datasetProcessing_ICOS(datasetURL)
             print("\n ICOS ----> \n Record: "+'{0:.3g}'.format(cnt/len(lstDataset))+" % \n ----> \n")
         else :
@@ -1515,7 +1523,6 @@ def if_URL_exist(url):
 #   datasetProcessing_SeaDataNet_EDMED(datasetURL)
 #--------------------
 #datasetProcessing_SeaDataNet_CDI("https://cdi.seadatanet.org/report/aggregation/120/2688/120/4/ds12/json")
-#datasetProcessing_ICOS("https://meta.icos-cp.eu/objects/mpjm3qpCpK1EzMPIR9nDE5BO")
 #datasetProcessing_ICOS("https://meta.icos-cp.eu/objects/Msxml8TlWbHvmQmDD6EdVgPc")
 #datasetProcessing_ICOS("https://meta.icos-cp.eu/objects/7c3iQ3A8SAeupVvMi8wFPWEN")
 #datasetProcessing_SeaDataNet_EDMED("https://edmed.seadatanet.org/report/249/")
@@ -1534,3 +1541,4 @@ deleteAllIndexFilesByExtension(".csv")
 #Run_indexingPipeline_ICOS()
 
 #--------------------
+#datasetProcessing_ICOS("https://meta.icos-cp.eu/objects/0ST81nXCND5VfAQdOCSJDveT")
